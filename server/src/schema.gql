@@ -1,0 +1,20 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Exercise {
+  equipment: String!
+  id: ID!
+  instructions: [String!]!
+  name: String!
+  primaryMuscles: [String!]!
+  secondaryMuscles: [String!]!
+}
+
+type Mutation {
+  createExercise(equipment: String!, instructions: [String!]!, name: String!, primaryMuscles: [String!]!, secondaryMuscles: [String!]!): Exercise!
+}
+
+type Query {
+  exercise(id: String!): Exercise!
+}
