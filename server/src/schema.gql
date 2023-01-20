@@ -2,6 +2,18 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreateExerciseInput {
+  equipment: String!
+  instructions: [String!]!
+  name: String!
+  primaryMuscles: [String!]!
+  secondaryMuscles: [String!]!
+}
+
+input CreateWorkoutInput {
+  name: String!
+}
+
 type Exercise {
   equipment: String!
   id: ID!
@@ -12,9 +24,18 @@ type Exercise {
 }
 
 type Mutation {
-  createExercise(equipment: String!, instructions: [String!]!, name: String!, primaryMuscles: [String!]!, secondaryMuscles: [String!]!): Exercise!
+  createExercise(createExerciseInput: CreateExerciseInput!): Exercise!
+  createWorkout(createWorkoutInput: CreateWorkoutInput!): Workout!
 }
 
 type Query {
   exercise(id: String!): Exercise!
+  exercises: [Exercise!]!
+  getWorkout(id: String!): Workout!
+  getWorkouts: [Workout!]!
+}
+
+type Workout {
+  id: ID!
+  name: String!
 }

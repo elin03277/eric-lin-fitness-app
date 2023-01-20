@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Exercise } from './exercise.entity';
 import { v4 as uuid } from 'uuid';
+import { CreateExerciseInput } from './exercise.input';
 
 @Injectable()
 export class ExerciseService {
@@ -15,13 +16,16 @@ export class ExerciseService {
     return this.exerciseRepository.findOneBy({ id });
   }
 
+  async getExercises(): Promise<Exercise[]> {
+    return this.exerciseRepository.find();
+  }
+
   async createExercise(
-    name,
-    equipment,
-    primaryMuscles,
-    secondaryMuscles,
-    instructions,
+    createExerciseInput: CreateExerciseInput,
   ): Promise<Exercise> {
+    const { name, equipment, primaryMuscles, secondaryMuscles, instructions } =
+      createExerciseInput;
+
     const exercise = this.exerciseRepository.create({
       id: uuid(),
       name,
