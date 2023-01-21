@@ -16,6 +16,10 @@ export class Workout {
   @Field()
   name: string;
 
+  @Column()
+  @Field()
+  exercises: string[];
+
   // @Column()
   // @Field((type) => [Exercise])
   // exercises: Exercise[];
