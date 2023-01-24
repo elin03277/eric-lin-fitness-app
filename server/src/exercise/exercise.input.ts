@@ -19,4 +19,7 @@ export class CreateExerciseInput {
 
   @Field((type) => [GraphQLString])
   instructions: string[];
+
+  @Field({ nullable: true })
+  workoutId?: string;
 }

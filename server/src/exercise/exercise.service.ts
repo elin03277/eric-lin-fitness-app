@@ -4,16 +4,19 @@ import { Repository } from 'typeorm';
 import { Exercise } from './exercise.entity';
 import { v4 as uuid } from 'uuid';
 import { CreateExerciseInput } from './exercise.input';
+import { WorkoutService } from '../workout/workout.service';
+import { Workout } from '../workout/workout.entity';
 
 @Injectable()
 export class ExerciseService {
   constructor(
     @InjectRepository(Exercise)
     private exerciseRepository: Repository<Exercise>,
+    private workoutService: WorkoutService,
   ) {}
 
   async getExercise(id: string): Promise<Exercise> {
-    return this.exerciseRepository.findOneBy({ id });
+    return this.exerciseRepository.findOneByOrFail({ id });
   }
 
   async getExercises(): Promise<Exercise[]> {
@@ -36,5 +39,9 @@ export class ExerciseService {
     });
 
     return this.exerciseRepository.save(exercise);
+  }
+
+  async getWorkout(workoutId: string): Promise<Workout> {
+    return this.workoutService.getWorkout(workoutId);
   }
 }

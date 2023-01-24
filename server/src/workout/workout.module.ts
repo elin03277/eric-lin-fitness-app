@@ -7,5 +7,6 @@ import { WorkoutService } from './workout.service';
 @Module({
   imports: [TypeOrmModule.forFeature([Workout])],
   providers: [WorkoutResolver, WorkoutService],
+  exports: [WorkoutService],
 })
 export class WorkoutModule {}

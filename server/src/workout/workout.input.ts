@@ -9,8 +9,8 @@ export class CreateWorkoutInput {
   @Field()
   name: string;
 
-  @Field((type) => [GraphQLString])
-  exercises: string[];
+  // @Field((type) => [GraphQLString])
+  // exercises: string[];
 
   //   @Field((type) => [Exercise])
   //   exercises: Exercise[];

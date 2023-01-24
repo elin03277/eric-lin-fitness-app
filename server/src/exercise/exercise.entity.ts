@@ -1,6 +1,13 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { GraphQLString } from 'graphql';
-import { Entity, PrimaryColumn, Column, ObjectIdColumn } from 'typeorm';
+import { Workout } from 'src/workout/workout.entity';
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  ObjectIdColumn,
+  ManyToMany,
+} from 'typeorm';
 
 // Exercise entity and object type
 @Entity()
@@ -32,4 +39,12 @@ export class Exercise {
   @Column()
   @Field((type) => [GraphQLString])
   instructions: string[];
+
+  @Column()
+  @Field((type) => [GraphQLString], { nullable: true })
+  workoutId: string[];
+
+  @ManyToMany(() => Workout, (workout) => workout.exercises)
+  @Field((type) => Workout, { nullable: true })
+  workout: Workout;
 }

@@ -13,7 +13,7 @@ export class WorkoutService {
   ) {}
 
   async getWorkout(id: string): Promise<Workout> {
-    return this.workoutRepository.findOneBy({ id });
+    return this.workoutRepository.findOneByOrFail({ id });
   }
 
   async getWorkouts(): Promise<Workout[]> {
