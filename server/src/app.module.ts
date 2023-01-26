@@ -4,7 +4,7 @@ import { ApolloDriver } from '@nestjs/apollo';
 import { ExerciseModule } from './exercise/exercise.module';
 import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { typeOrmConfig } from 'ormconfig';
+import { typeOrmConfig } from './ormconfig';
 import { WorkoutModule } from './workout/workout.module';
 
 @Module({
