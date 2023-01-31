@@ -26,15 +26,21 @@ export class ExerciseService {
   async createExercise(
     createExerciseInput: CreateExerciseInput,
   ): Promise<Exercise> {
-    const { name, equipment, primaryMuscles, secondaryMuscles, instructions } =
+    const {
+      name,
+      equipment,
+      pattern,
+      instructions,
+    } = // primaryMuscles, secondaryMuscles, instructions } =
       createExerciseInput;
 
     const exercise = this.exerciseRepository.create({
       id: uuid(),
       name,
       equipment,
-      primaryMuscles,
-      secondaryMuscles,
+      pattern,
+      // primaryMuscles,
+      // secondaryMuscles,
       instructions,
     });
 

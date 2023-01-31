@@ -11,10 +11,12 @@
   "dependencies": {
     "@heroicons/react": "^2.0.14",
     "framer-motion": "^8.5.2",
+    "graphql": "^16.6.0",
     "react": "^18.2.0",
     "react-anchor-link-smooth-scroll": "^1.0.12",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.42.1"
+    "react-hook-form": "^7.42.1",
+    "urql": "^3.0.3"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",

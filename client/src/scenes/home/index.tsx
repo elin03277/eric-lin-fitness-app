@@ -8,13 +8,27 @@ import SponsorForbes from "@/assets/SponsorForbes.png";
 import SponsorFortune from "@/assets/SponsorFortune.png";
 import AnchorLink from "react-anchor-link-smooth-scroll";
 import { motion } from "framer-motion";
+import { useQuery } from "urql";
 
 type Props = {
   setSelectedPage: (value: SelectedPage) => void;
 };
 
+const GetExerciseQuery = `
+query {
+  exercise(id: "d1410779-2fc2-4c3a-8e59-bdfb6da8fbb5") {
+    name
+  }
+}
+`;
 const Home = ({ setSelectedPage }: Props) => {
   const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
+  const [{ data, fetching, error }] = useQuery({
+    query: GetExerciseQuery,
+  });
+
+  if (fetching) return <p>Loading...</p>;
+  if (error) return <p>{error.message}</p>;
 
   return (
     <section id="home" className="gap-16 bg-gray-20 py-10 md:h-full md:pb-0">
@@ -43,9 +57,11 @@ const Home = ({ setSelectedPage }: Props) => {
               </div>
             </div>
             <p className="mt-8 text-sm">
-              Unrivaled Gym. Unparalleled Training Fitness Classes. World Class
+              {data.exercise.name}
+
+              {/* Unrivaled Gym. Unparalleled Training Fitness Classes. World Class
               Studios to get the Body Shape of your Dreams.. Get Your Dream Body
-              Now.
+              Now. */}
             </p>
           </motion.div>
 

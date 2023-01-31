@@ -29,12 +29,16 @@ export class Exercise {
   equipment: string;
 
   @Column()
-  @Field((type) => [GraphQLString])
-  primaryMuscles: string[];
+  @Field()
+  pattern: string;
 
-  @Column()
-  @Field((type) => [GraphQLString])
-  secondaryMuscles: string[];
+  // @Column()
+  // @Field((type) => [GraphQLString])
+  // primaryMuscles: string[];
+
+  // @Column()
+  // @Field((type) => [GraphQLString])
+  // secondaryMuscles: string[];
 
   @Column()
   @Field((type) => [GraphQLString])

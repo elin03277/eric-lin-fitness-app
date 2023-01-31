@@ -6,8 +6,7 @@ input CreateExerciseInput {
   equipment: String!
   instructions: [String!]!
   name: String!
-  primaryMuscles: [String!]!
-  secondaryMuscles: [String!]!
+  pattern: String!
 }
 
 input CreateWorkoutInput {
@@ -19,8 +18,9 @@ type Exercise {
   id: ID!
   instructions: [String!]!
   name: String!
-  primaryMuscles: [String!]!
-  secondaryMuscles: [String!]!
+  pattern: String!
+  workout: Workout
+  workoutId: [String!]
 }
 
 type Mutation {
@@ -36,6 +36,7 @@ type Query {
 }
 
 type Workout {
+  exercises: Exercise
   id: ID!
   name: String!
 }
