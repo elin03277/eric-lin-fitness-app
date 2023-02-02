@@ -6,6 +6,8 @@ import ContactUs from "@/scenes/contactUs";
 import Footer from "@/scenes/footer";
 import { useEffect, useState } from "react";
 import { SelectedPage } from "@/shared/types";
+import { Routes, Route, Navigate } from "react-router-dom";
+import AddExercise from "@/scenes/addExercise";
 
 function App() {
   const [selectedPage, setSelectedPage] = useState<SelectedPage>(
@@ -33,10 +35,36 @@ function App() {
         selectedPage={selectedPage}
         setSelectedPage={setSelectedPage}
       />
-      <Home setSelectedPage={setSelectedPage} />
-      <Benefits setSelectedPage={setSelectedPage} />
-      <OurClasses setSelectedPage={setSelectedPage} />
-      <ContactUs setSelectedPage={setSelectedPage} />
+      <Routes>
+        <Route path="/" element={<Navigate to="/home" />} />
+        <Route path="*" element={<Navigate to="/home" />} />
+        <Route
+          path="/home"
+          element={<Home setSelectedPage={setSelectedPage} />}
+        />
+        <Route
+          path="/benefits"
+          element={<Benefits setSelectedPage={setSelectedPage} />}
+        />
+        <Route
+          path="/ourclasses"
+          element={<OurClasses setSelectedPage={setSelectedPage} />}
+        />
+        <Route
+          path="/contactus"
+          element={<ContactUs setSelectedPage={setSelectedPage} />}
+        />
+        <Route
+          path="/add"
+          element={<AddExercise setSelectedPage={setSelectedPage} />}
+        />
+        <Route path=":id">
+          <Route
+            index
+            element={<OurClasses setSelectedPage={setSelectedPage} />}
+          />
+        </Route>
+      </Routes>
       <Footer />
     </div>
   );

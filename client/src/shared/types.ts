@@ -16,3 +16,10 @@ export interface ClassType {
   description?: string;
   image: string;
 }
+
+export interface ExerciseType {
+  name: string;
+  equipment: string;
+  pattern: string;
+  instructions: string;
+}

@@ -19,8 +19,11 @@ export class CreateExerciseInput {
   // @Field((type) => [GraphQLString])
   // secondaryMuscles: string[];
 
-  @Field((type) => [GraphQLString])
-  instructions: string[];
+  // @Field((type) => [GraphQLString])
+  // instructions: string[];
+
+  @Field()
+  instructions: string;
 
   // @Field({ nullable: true })
   // workoutId?: string;

@@ -40,9 +40,13 @@ export class Exercise {
   // @Field((type) => [GraphQLString])
   // secondaryMuscles: string[];
 
+  // @Column()
+  // @Field((type) => [GraphQLString])
+  // instructions: string[];
+
   @Column()
-  @Field((type) => [GraphQLString])
-  instructions: string[];
+  @Field()
+  instructions: string;
 
   @Column()
   @Field((type) => [GraphQLString], { nullable: true })

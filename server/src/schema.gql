@@ -4,7 +4,7 @@
 
 input CreateExerciseInput {
   equipment: String!
-  instructions: [String!]!
+  instructions: String!
   name: String!
   pattern: String!
 }
@@ -16,7 +16,7 @@ input CreateWorkoutInput {
 type Exercise {
   equipment: String!
   id: ID!
-  instructions: [String!]!
+  instructions: String!
   name: String!
   pattern: String!
   workout: Workout
