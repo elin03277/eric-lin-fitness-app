@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import HText from "@/shared/HText";
 import { useMutation } from "urql";
-import ConfirmExercise from "./ConfirmExercise";
+import Exercise from "@/shared/Exercise";
 import { useState } from "react";
 
 type Props = {
@@ -182,18 +182,20 @@ const AddExercise = ({ setSelectedPage }: Props) => {
           >
             <div className="w-full before:absolute before:-bottom-20 before:-right-10 before:z-[-1] md:before:content-evolvetext">
               {dataReceived ? (
-                <ConfirmExercise
+                <Exercise
                   name={data.createExercise.name}
                   equipment={data.createExercise.equipment}
                   pattern={data.createExercise.pattern}
                   instructions={data.createExercise.instructions}
+                  setSelectedPage={setSelectedPage}
                 />
               ) : (
-                <ConfirmExercise
+                <Exercise
                   name="Name"
                   equipment="Equipment"
                   pattern="Pattern"
                   instructions="Instructions"
+                  setSelectedPage={setSelectedPage}
                 />
               )}
             </div>

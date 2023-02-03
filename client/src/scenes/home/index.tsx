@@ -25,40 +25,62 @@ type Props = {
 
 const GetExerciseQuery = `
 query {
-  exercise(id: "d1410779-2fc2-4c3a-8e59-bdfb6da8fbb5") {
+  exercises {
     name
+    equipment
+    pattern
+    instructions
   }
 }
 `;
+
+// const GetExerciseQuery2 = `
+// query {
+//   exercise(id: "8709a6e5-bc9f-4023-b2f1-3897eda4ec0e") {
+//     name
+//     equipment
+//     pattern
+//     instructions
+//   }
+// }
+// `;
 const Home = ({ setSelectedPage }: Props) => {
   const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
 
-  const [{ data, fetching, error }] = useQuery<{ exercises: ExerciseType[] }>({
+  const [{ data, fetching, error }] = useQuery({
     query: GetExerciseQuery,
   });
 
-  if (fetching) return <p>Loading...</p>;
-  if (error) return <p>{error.message}</p>;
+  if (fetching) return null;
 
   const exercises: Array<ExerciseType> = [
     {
-      name: "Barbell Shoulder Press",
-      equipment: "Barbell",
-      pattern: "Push",
-      instructions: "Bar at chest, push vertically, lower slowly.",
+      name: data.exercises[0].name,
+      equipment: data.exercises[0].equipment,
+      pattern: data.exercises[0].pattern,
+      instructions: data.exercises[0].instructions,
     },
 
     {
-      name: "Barbell Shoulder Press",
-      equipment: "Barbell",
-      pattern: "Push",
-      instructions: "Bar at chest, push vertically, lower slowly.",
+      name: data.exercises[1].name,
+      equipment: data.exercises[1].equipment,
+      pattern: data.exercises[1].pattern,
+      instructions: data.exercises[1].instructions,
+    },
+    {
+      name: data.exercises[2].name,
+      equipment: data.exercises[2].equipment,
+      pattern: data.exercises[2].pattern,
+      instructions: data.exercises[2].instructions,
     },
   ];
 
   return (
-    <section id="home" className="mx-auto min-h-full w-5/6 py-20">
-      <motion.div onViewportEnter={() => setSelectedPage(SelectedPage.Home)}>
+    <section id="home" className="bg-gray-20">
+      <motion.div
+        className="mx-auto w-5/6  gap-16 py-20 md:h-full"
+        onViewportEnter={() => setSelectedPage(SelectedPage.Home)}
+      >
         {/* HEADER */}
         <motion.div
           className="md:my-5 md:w-3/5"
@@ -71,25 +93,24 @@ const Home = ({ setSelectedPage }: Props) => {
             visible: { opacity: 1, x: 0 },
           }}
         >
-          <HText>MORE THAN JUST A GYM.</HText>
-          <p className="my-5 text-sm">
-            We provide world class fitness equipment, trainers, and classes to
-            get you to your ultimate fitness goals with ease. We provide true
-            care into each and every member.
+          <HText>START YOUR FITNESS JOURNEY TODAY!</HText>
+          <p className="my-5">
+            Here are some example exercises to get you started! Feel free to add
+            your own!
           </p>
         </motion.div>
 
-        {/* BENEFITS */}
+        {/* EXERCISES */}
         <motion.div
-          className="mt-flex items-center justify-between gap-8 md:flex"
+          className="mt-5 items-center justify-between gap-8 md:flex"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.5 }}
           variants={container}
         >
-          {exercises.map((exercise: ExerciseType) => (
+          {exercises.map((exercise: ExerciseType, index: number) => (
             <Exercise
-              //key={exercise.name}
+              key={exercise.name + index}
               name={exercise.name}
               equipment={exercise.equipment}
               pattern={exercise.pattern}
@@ -99,19 +120,6 @@ const Home = ({ setSelectedPage }: Props) => {
           ))}
         </motion.div>
       </motion.div>
-
-      {/* SPONSORS */}
-      {/* {isAboveMediumScreens && (
-        <div className="h-[150px] w-full bg-primary-100 py-10">
-          <div className="mx-auto w-5/6">
-            <div className="flex w-3/5 items-center justify-between gap-8">
-              <img alt="redbull-sponsor" src={SponsorRedBull} />
-              <img alt="forbes-sponsor" src={SponsorForbes} />
-              <img alt="fortune-sponsor" src={SponsorFortune} />
-            </div>
-          </div>
-        </div>
-      )} */}
     </section>
   );
 };
