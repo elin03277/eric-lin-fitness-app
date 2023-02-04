@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import { useQuery } from "urql";
 import HText from "@/shared/HText";
 import Exercise from "@/shared/Exercise";
+import { useState } from "react";
 
 const container = {
   hidden: {},
@@ -24,8 +25,8 @@ type Props = {
 };
 
 const GetExerciseQuery = `
-query {
-  exercises {
+query($offset: Int!, $limit: Int!) {
+  exercises(offset: $offset, limit: $limit) {
     name
     equipment
     pattern
@@ -46,34 +47,49 @@ query {
 // `;
 const Home = ({ setSelectedPage }: Props) => {
   const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
-
+  const [offset, setOffset] = useState(0);
+  const [limit, setLimit] = useState(3);
+  const [invisible, setInvisible] = useState("invisible");
   const [{ data, fetching, error }] = useQuery({
     query: GetExerciseQuery,
+    variables: { offset, limit },
+    requestPolicy: "cache-first",
   });
 
+  const handleAddExercises = () => {
+    setOffset(offset + limit);
+  };
+
+  const handleSubtractExercises = () => {
+    setOffset(offset - limit);
+  };
+
   if (fetching) return null;
+  //if (error) return null;
 
-  const exercises: Array<ExerciseType> = [
-    {
-      name: data.exercises[0].name,
-      equipment: data.exercises[0].equipment,
-      pattern: data.exercises[0].pattern,
-      instructions: data.exercises[0].instructions,
-    },
+  console.log(offset);
 
-    {
-      name: data.exercises[1].name,
-      equipment: data.exercises[1].equipment,
-      pattern: data.exercises[1].pattern,
-      instructions: data.exercises[1].instructions,
-    },
-    {
-      name: data.exercises[2].name,
-      equipment: data.exercises[2].equipment,
-      pattern: data.exercises[2].pattern,
-      instructions: data.exercises[2].instructions,
-    },
-  ];
+  // const exercises: Array<ExerciseType> = [
+  //   {
+  //     name: data.exercises[0].name,
+  //     equipment: data.exercises[0].equipment,
+  //     pattern: data.exercises[0].pattern,
+  //     instructions: data.exercises[0].instructions,
+  //   },
+
+  //   {
+  //     name: data.exercises[1].name,
+  //     equipment: data.exercises[1].equipment,
+  //     pattern: data.exercises[1].pattern,
+  //     instructions: data.exercises[1].instructions,
+  //   },
+  //   {
+  //     name: data.exercises[2].name,
+  //     equipment: data.exercises[2].equipment,
+  //     pattern: data.exercises[2].pattern,
+  //     instructions: data.exercises[2].instructions,
+  //   },
+  // ];
 
   return (
     <section id="home" className="bg-gray-20">
@@ -108,9 +124,8 @@ const Home = ({ setSelectedPage }: Props) => {
           viewport={{ once: true, amount: 0.5 }}
           variants={container}
         >
-          {exercises.map((exercise: ExerciseType, index: number) => (
+          {data.exercises.map((exercise: ExerciseType, index: number) => (
             <Exercise
-              key={exercise.name + index}
               name={exercise.name}
               equipment={exercise.equipment}
               pattern={exercise.pattern}
@@ -118,6 +133,22 @@ const Home = ({ setSelectedPage }: Props) => {
               setSelectedPage={setSelectedPage}
             />
           ))}
+        </motion.div>
+        <motion.div className="flex justify-between">
+          <button
+            type="button"
+            className={` mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`}
+            onClick={handleSubtractExercises}
+          >
+            Prev
+          </button>
+          <button
+            type="button"
+            className="mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white"
+            onClick={handleAddExercises}
+          >
+            Next
+          </button>
         </motion.div>
       </motion.div>
     </section>

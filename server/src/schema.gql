@@ -29,8 +29,9 @@ type Mutation {
 }
 
 type Query {
+  countExercises: [Exercise!]!
   exercise(id: String!): Exercise!
-  exercises: [Exercise!]!
+  exercises(limit: Int!, offset: Int!): [Exercise!]!
   getWorkout(id: String!): Workout!
   getWorkouts: [Workout!]!
 }

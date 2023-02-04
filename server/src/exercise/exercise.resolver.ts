@@ -1,5 +1,6 @@
 import {
   Args,
+  Int,
   Mutation,
   Parent,
   Query,
@@ -22,8 +23,16 @@ export class ExerciseResolver {
   }
 
   @Query((returns) => [Exercise])
-  exercises() {
-    return this.exerciseService.getExercises();
+  exercises(
+    @Args('offset', { type: () => Int }) offset: number,
+    @Args('limit', { type: () => Int }) limit: number,
+  ): Promise<Exercise[]> {
+    return this.exerciseService.getExercises(offset, limit);
+  }
+
+  @Query((returns) => [Exercise])
+  countExercises(): Promise<number> {
+    return this.exerciseService.countExercises();
   }
 
   @ResolveField((returns) => Workout)
