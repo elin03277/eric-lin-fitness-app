@@ -12,6 +12,7 @@ import { useQuery } from "urql";
 import HText from "@/shared/HText";
 import Exercise from "@/shared/Exercise";
 import { useState } from "react";
+import uuid from "react-uuid";
 
 const container = {
   hidden: {},
@@ -48,23 +49,36 @@ query($offset: Int!, $limit: Int!) {
 const Home = ({ setSelectedPage }: Props) => {
   const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
   const [offset, setOffset] = useState(0);
-  const [limit, setLimit] = useState(3);
+  const [limit, setLimit] = useState(1);
   const [invisible, setInvisible] = useState("invisible");
+  const [previousExercises, setPreviousExercises] = useState<any[]>([]);
+  const [currentExercises, setCurrentExercises] = useState<any>(null);
+
   const [{ data, fetching, error }] = useQuery({
     query: GetExerciseQuery,
     variables: { offset, limit },
-    requestPolicy: "cache-first",
+    //    requestPolicy: "cache-first",
   });
 
-  const handleAddExercises = () => {
-    setOffset(offset + limit);
-  };
-
-  const handleSubtractExercises = () => {
-    setOffset(offset - limit);
-  };
-
   if (fetching) return null;
+
+  const handlePreviousButton = () => {
+    setOffset(offset - limit);
+    setCurrentExercises(previousExercises[previousExercises.length - limit]);
+    setPreviousExercises(
+      previousExercises.slice(0, previousExercises.length - limit)
+    );
+  };
+
+  const handleNextButton = (exercise: any) => {
+    setOffset(offset + limit);
+    setPreviousExercises([...previousExercises, currentExercises]);
+
+    previousExercises.includes(exercise)
+      ? setCurrentExercises(previousExercises[previousExercises.length + limit])
+      : setCurrentExercises(exercise);
+  };
+
   //if (error) return null;
 
   console.log(offset);
@@ -124,7 +138,16 @@ const Home = ({ setSelectedPage }: Props) => {
           viewport={{ once: true, amount: 0.5 }}
           variants={container}
         >
-          {data.exercises.map((exercise: ExerciseType, index: number) => (
+          {currentExercises && (
+            <Exercise
+              name={currentExercises.name}
+              equipment={currentExercises.equipment}
+              pattern={currentExercises.pattern}
+              instructions={currentExercises.instructions}
+              setSelectedPage={setSelectedPage}
+            />
+          )}
+          {/* {data.exercises.map((exercise: ExerciseType, index: number) => (
             <Exercise
               name={exercise.name}
               equipment={exercise.equipment}
@@ -132,20 +155,21 @@ const Home = ({ setSelectedPage }: Props) => {
               instructions={exercise.instructions}
               setSelectedPage={setSelectedPage}
             />
-          ))}
+          ))} */}
         </motion.div>
         <motion.div className="flex justify-between">
           <button
             type="button"
             className={` mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`}
-            onClick={handleSubtractExercises}
+            onClick={handlePreviousButton}
+            disabled={previousExercises.length === 0}
           >
             Prev
           </button>
           <button
             type="button"
             className="mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white"
-            onClick={handleAddExercises}
+            onClick={() => handleNextButton(data.exercises[0])}
           >
             Next
           </button>
