@@ -11,6 +11,7 @@ import { Exercise } from './exercise.entity';
 import { ExerciseService } from './exercise.service';
 import { CreateExerciseInput } from './exercise.input';
 import { Workout } from '../workout/workout.entity';
+import { GraphQLInt } from 'graphql';
 
 // Resolver of type exercise and this is where we define queries(retrieves data) or mutations(create new data or change existing data)
 @Resolver((of) => Exercise)
@@ -30,7 +31,7 @@ export class ExerciseResolver {
     return this.exerciseService.getExercises(offset, limit);
   }
 
-  @Query((returns) => [Exercise])
+  @Query((returns) => GraphQLInt)
   countExercises(): Promise<number> {
     return this.exerciseService.countExercises();
   }

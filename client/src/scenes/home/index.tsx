@@ -11,8 +11,8 @@ import { motion } from "framer-motion";
 import { useQuery } from "urql";
 import HText from "@/shared/HText";
 import Exercise from "@/shared/Exercise";
-import { useState } from "react";
-import uuid from "react-uuid";
+import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 
 const container = {
   hidden: {},
@@ -25,6 +25,8 @@ type Props = {
   setSelectedPage: (value: SelectedPage) => void;
 };
 
+const buttonStyle = `mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`;
+
 const GetExerciseQuery = `
 query($offset: Int!, $limit: Int!) {
   exercises(offset: $offset, limit: $limit) {
@@ -33,6 +35,12 @@ query($offset: Int!, $limit: Int!) {
     pattern
     instructions
   }
+}
+`;
+
+const GetExerciseCount = `
+query {
+  countExercises
 }
 `;
 
@@ -46,64 +54,68 @@ query($offset: Int!, $limit: Int!) {
 //   }
 // }
 // `;
+
 const Home = ({ setSelectedPage }: Props) => {
   const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
   const [offset, setOffset] = useState(0);
-  const [limit, setLimit] = useState(1);
-  const [invisible, setInvisible] = useState("invisible");
+  const [limit, setLimit] = useState(3);
+  const [pages, setPages] = useState(1);
+  const [prevInvisible, setPrevInvisible] = useState("invisible");
+  const [nextInvisible, setNextInvisible] = useState("");
   const [previousExercises, setPreviousExercises] = useState<any[]>([]);
   const [currentExercises, setCurrentExercises] = useState<any>(null);
 
-  const [{ data, fetching, error }] = useQuery({
+  const [result] = useQuery({
     query: GetExerciseQuery,
     variables: { offset, limit },
-    //    requestPolicy: "cache-first",
   });
 
-  if (fetching) return null;
+  const [countResult] = useQuery({
+    query: GetExerciseCount,
+  });
+
+  const exercises = useMemo(() => result.data?.exercises || [], [result.data]);
+
+  if (result.fetching) return null;
+  if (countResult.fetching) return null;
+
+  const count = countResult.data;
+  const pageLimit = Math.floor(count.countExercises / limit);
+
+  console.log(count.countExercises);
+  console.log(pageLimit);
 
   const handlePreviousButton = () => {
-    setOffset(offset - limit);
-    setCurrentExercises(previousExercises[previousExercises.length - limit]);
-    setPreviousExercises(
-      previousExercises.slice(0, previousExercises.length - limit)
-    );
+    console.log(pages);
+    pages === 2 ? setPrevInvisible("invisible") : setPrevInvisible("");
+    if (offset >= limit) {
+      setOffset(offset - limit);
+      setCurrentExercises(previousExercises[previousExercises.length - limit]);
+      setPreviousExercises(
+        previousExercises.slice(0, previousExercises.length - limit)
+      );
+      setNextInvisible("");
+      setPages(pages - 1);
+    }
   };
 
-  const handleNextButton = (exercise: any) => {
-    setOffset(offset + limit);
-    setPreviousExercises([...previousExercises, currentExercises]);
+  const handleNextButton = (exercise: any[]) => {
+    pages + 1 < pageLimit
+      ? setNextInvisible("")
+      : setNextInvisible("invisible");
+    if (pages < pageLimit) {
+      setOffset(offset + limit);
+      setPreviousExercises([...previousExercises, currentExercises]);
 
-    previousExercises.includes(exercise)
-      ? setCurrentExercises(previousExercises[previousExercises.length + limit])
-      : setCurrentExercises(exercise);
+      previousExercises.includes(exercise)
+        ? setCurrentExercises(
+            previousExercises[previousExercises.length + limit]
+          )
+        : setCurrentExercises(exercise);
+      setPrevInvisible("");
+      setPages(pages + 1);
+    }
   };
-
-  //if (error) return null;
-
-  console.log(offset);
-
-  // const exercises: Array<ExerciseType> = [
-  //   {
-  //     name: data.exercises[0].name,
-  //     equipment: data.exercises[0].equipment,
-  //     pattern: data.exercises[0].pattern,
-  //     instructions: data.exercises[0].instructions,
-  //   },
-
-  //   {
-  //     name: data.exercises[1].name,
-  //     equipment: data.exercises[1].equipment,
-  //     pattern: data.exercises[1].pattern,
-  //     instructions: data.exercises[1].instructions,
-  //   },
-  //   {
-  //     name: data.exercises[2].name,
-  //     equipment: data.exercises[2].equipment,
-  //     pattern: data.exercises[2].pattern,
-  //     instructions: data.exercises[2].instructions,
-  //   },
-  // ];
 
   return (
     <section id="home" className="bg-gray-20">
@@ -128,6 +140,14 @@ const Home = ({ setSelectedPage }: Props) => {
             Here are some example exercises to get you started! Feel free to add
             your own!
           </p>
+          <Link to="/add">
+            <button
+              type="button"
+              className="mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
+            >
+              Add Exercise
+            </button>
+          </Link>
         </motion.div>
 
         {/* EXERCISES */}
@@ -138,38 +158,40 @@ const Home = ({ setSelectedPage }: Props) => {
           viewport={{ once: true, amount: 0.5 }}
           variants={container}
         >
-          {currentExercises && (
-            <Exercise
-              name={currentExercises.name}
-              equipment={currentExercises.equipment}
-              pattern={currentExercises.pattern}
-              instructions={currentExercises.instructions}
-              setSelectedPage={setSelectedPage}
-            />
-          )}
-          {/* {data.exercises.map((exercise: ExerciseType, index: number) => (
-            <Exercise
-              name={exercise.name}
-              equipment={exercise.equipment}
-              pattern={exercise.pattern}
-              instructions={exercise.instructions}
-              setSelectedPage={setSelectedPage}
-            />
-          ))} */}
+          <Exercise
+            name={exercises[0].name}
+            equipment={exercises[0].equipment}
+            pattern={exercises[0].pattern}
+            instructions={exercises[0].instructions}
+            setSelectedPage={setSelectedPage}
+          />
+          <Exercise
+            name={exercises[1].name}
+            equipment={exercises[1].equipment}
+            pattern={exercises[1].pattern}
+            instructions={exercises[1].instructions}
+            setSelectedPage={setSelectedPage}
+          />
+          <Exercise
+            name={exercises[2].name}
+            equipment={exercises[2].equipment}
+            pattern={exercises[2].pattern}
+            instructions={exercises[2].instructions}
+            setSelectedPage={setSelectedPage}
+          />
         </motion.div>
         <motion.div className="flex justify-between">
           <button
             type="button"
-            className={` mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`}
+            className={`${prevInvisible} ${buttonStyle}`}
             onClick={handlePreviousButton}
-            disabled={previousExercises.length === 0}
           >
             Prev
           </button>
           <button
             type="button"
-            className="mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white"
-            onClick={() => handleNextButton(data.exercises[0])}
+            className={`${nextInvisible} ${buttonStyle}`}
+            onClick={() => handleNextButton(exercises[0])}
           >
             Next
           </button>
