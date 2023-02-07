@@ -24,7 +24,7 @@ export class ExerciseResolver {
   }
 
   @Query((returns) => [Exercise])
-  exercises(
+  getExercises(
     @Args('offset', { type: () => Int }) offset: number,
     @Args('limit', { type: () => Int }) limit: number,
   ): Promise<Exercise[]> {

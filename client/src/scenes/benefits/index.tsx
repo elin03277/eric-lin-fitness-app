@@ -44,9 +44,10 @@ type Props = {
 
 const Benefits = ({ setSelectedPage }: Props) => {
   return (
-    <section id="benefits" className="mx-auto min-h-full w-5/6 py-20">
+    <div className="bg-gray-20">
       <motion.div
         onViewportEnter={() => setSelectedPage(SelectedPage.Benefits)}
+        className="mx-auto min-h-full w-5/6 py-20"
       >
         {/* HEADER */}
         <motion.div
@@ -162,7 +163,7 @@ const Benefits = ({ setSelectedPage }: Props) => {
           </div>
         </div>
       </motion.div>
-    </section>
+    </div>
   );
 };
 

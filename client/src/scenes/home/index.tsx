@@ -1,12 +1,6 @@
 import useMediaQuery from "@/hooks/useMediaQuery";
 import ActionButton from "@/shared/ActionButton";
 import { ExerciseType, SelectedPage } from "@/shared/types";
-import HomePageText from "@/assets/HomePageText.png";
-import HomePageGraphic from "@/assets/HomePageGraphic.png";
-import SponsorRedBull from "@/assets/SponsorRedBull.png";
-import SponsorForbes from "@/assets/SponsorForbes.png";
-import SponsorFortune from "@/assets/SponsorFortune.png";
-import AnchorLink from "react-anchor-link-smooth-scroll";
 import { motion } from "framer-motion";
 import { useQuery } from "urql";
 import HText from "@/shared/HText";
@@ -29,7 +23,7 @@ const buttonStyle = `mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition
 
 const GetExerciseQuery = `
 query($offset: Int!, $limit: Int!) {
-  exercises(offset: $offset, limit: $limit) {
+  getExercises(offset: $offset, limit: $limit) {
     name
     equipment
     pattern
@@ -43,17 +37,6 @@ query {
   countExercises
 }
 `;
-
-// const GetExerciseQuery2 = `
-// query {
-//   exercise(id: "8709a6e5-bc9f-4023-b2f1-3897eda4ec0e") {
-//     name
-//     equipment
-//     pattern
-//     instructions
-//   }
-// }
-// `;
 
 const Home = ({ setSelectedPage }: Props) => {
   const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
@@ -74,7 +57,10 @@ const Home = ({ setSelectedPage }: Props) => {
     query: GetExerciseCount,
   });
 
-  const exercises = useMemo(() => result.data?.exercises || [], [result.data]);
+  const exercises = useMemo(
+    () => result.data?.getExercises || [],
+    [result.data]
+  );
 
   if (result.fetching) return null;
   if (countResult.fetching) return null;
@@ -118,7 +104,7 @@ const Home = ({ setSelectedPage }: Props) => {
   };
 
   return (
-    <section id="home" className="bg-gray-20">
+    <div className="bg-gray-20">
       <motion.div
         className="mx-auto w-5/6  gap-16 py-20 md:h-full"
         onViewportEnter={() => setSelectedPage(SelectedPage.Home)}
@@ -197,7 +183,7 @@ const Home = ({ setSelectedPage }: Props) => {
           </button>
         </motion.div>
       </motion.div>
-    </section>
+    </div>
   );
 };
 

@@ -45,10 +45,13 @@ const AddExercise = ({ setSelectedPage }: Props) => {
     reset();
   };
 
+  if (fetching) return null;
+
   return (
-    <section id="contactus" className="mx-auto w-5/6 pt-24 pb-32">
+    <div className="bg-gray-20">
       <motion.div
-        onViewportEnter={() => setSelectedPage(SelectedPage.ContactUs)}
+        onViewportEnter={() => setSelectedPage(SelectedPage.Home)}
+        className="mx-auto w-5/6 pt-24 pb-32"
       >
         {/* HEADER */}
         <motion.div
@@ -202,7 +205,7 @@ const AddExercise = ({ setSelectedPage }: Props) => {
           </motion.div>
         </div>
       </motion.div>
-    </section>
+    </div>
   );
 };
 
