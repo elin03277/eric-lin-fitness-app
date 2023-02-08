@@ -57,12 +57,6 @@ function App() {
           path="/add"
           element={<AddExercise setSelectedPage={setSelectedPage} />}
         />
-        <Route path=":id">
-          <Route
-            index
-            element={<OurClasses setSelectedPage={setSelectedPage} />}
-          />
-        </Route>
       </Routes>
       <Footer />
     </div>
