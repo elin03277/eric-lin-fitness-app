@@ -62,14 +62,84 @@ const Home = ({ setSelectedPage }: Props) => {
     [result.data]
   );
 
-  if (result.fetching) return null;
-  if (countResult.fetching) return null;
+  if (result.fetching || countResult.fetching)
+    return (
+      <div className="bg-gray-20">
+        <motion.div
+          className="mx-auto w-5/6  gap-16 py-20 md:h-full"
+          onViewportEnter={() => setSelectedPage(SelectedPage.Home)}
+        >
+          {/* HEADER */}
+          <motion.div
+            className="md:my-5 md:w-3/5"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.5 }}
+            variants={{
+              hidden: { opacity: 0, x: -50 },
+              visible: { opacity: 1, x: 0 },
+            }}
+          >
+            <HText>START YOUR FITNESS JOURNEY TODAY!</HText>
+            <p className="my-5">
+              Here are some example exercises to get you started! Feel free to
+              add your own!
+            </p>
+            <Link to="/add">
+              <button
+                type="button"
+                className="mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
+              >
+                Add Exercise
+              </button>
+            </Link>
+          </motion.div>
+
+          {/* EXERCISES */}
+          <motion.div
+            className="mt-5 items-center justify-between gap-8 md:flex"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.5 }}
+            variants={container}
+          >
+            <Exercise
+              name="Loading Name..."
+              equipment="Loading..."
+              pattern="Loading..."
+              instructions="Loading..."
+              setSelectedPage={setSelectedPage}
+            />
+            <Exercise
+              name="Loading Name..."
+              equipment="Loading..."
+              pattern="Loading..."
+              instructions="Loading..."
+              setSelectedPage={setSelectedPage}
+            />
+            <Exercise
+              name="Loading Name..."
+              equipment="Loading..."
+              pattern="Loading..."
+              instructions="Loading..."
+              setSelectedPage={setSelectedPage}
+            />
+          </motion.div>
+          <motion.div className="flex justify-between">
+            <button type="button" className={`${prevInvisible} ${buttonStyle}`}>
+              Prev
+            </button>
+            <button type="button" className={`${nextInvisible} ${buttonStyle}`}>
+              Next
+            </button>
+          </motion.div>
+        </motion.div>
+      </div>
+    );
 
   const count = countResult.data;
   const pageLimit = Math.floor(count.countExercises / limit);
-
-  console.log(count.countExercises);
-  console.log(pageLimit);
 
   const handlePreviousButton = () => {
     console.log(pages);

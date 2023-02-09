@@ -11,10 +11,10 @@ const client = createClient({
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <Provider value={client}>
-      <BrowserRouter>
+    <BrowserRouter>
+      <Provider value={client}>
         <App />
-      </BrowserRouter>
-    </Provider>
+      </Provider>
+    </BrowserRouter>
   </React.StrictMode>
 );
