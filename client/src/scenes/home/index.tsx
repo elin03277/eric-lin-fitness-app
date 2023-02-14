@@ -84,7 +84,7 @@ const Home = ({ setSelectedPage }: Props) => {
             <HText>START YOUR FITNESS JOURNEY TODAY!</HText>
             <p className="my-5">
               Here are some example exercises to get you started! Feel free to
-              add your own!
+              add your own! 3 exercises need to be added for a new page to show!
             </p>
             <Link to="/add">
               <button

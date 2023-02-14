@@ -23,9 +23,21 @@ type Exercise {
   workoutId: [String!]
 }
 
+type LoginResponse {
+  access_token: String!
+  user: User!
+}
+
+input LoginUserInput {
+  password: String!
+  username: String!
+}
+
 type Mutation {
   createExercise(createExerciseInput: CreateExerciseInput!): Exercise!
   createWorkout(createWorkoutInput: CreateWorkoutInput!): Workout!
+  login(loginUserInput: LoginUserInput!): LoginResponse!
+  signup(loginUserInput: LoginUserInput!): User!
 }
 
 type Query {
@@ -34,6 +46,13 @@ type Query {
   getExercises(limit: Int!, offset: Int!): [Exercise!]!
   getWorkout(id: String!): Workout!
   getWorkouts: [Workout!]!
+  user(username: String!): User!
+  users: [User!]!
+}
+
+type User {
+  id: Int!
+  username: String!
 }
 
 type Workout {
