@@ -51,7 +51,8 @@ type Query {
 }
 
 type User {
-  id: Int!
+  id: ID!
+  password: String!
   username: String!
 }
 

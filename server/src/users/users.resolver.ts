@@ -12,7 +12,7 @@ export class UsersResolver {
   @UseGuards(JwtAuthGuard)
   findAll() {
     // findAll(@Context() context) {} will make the user available in context.user
-    return this.usersService.findAll();
+    return this.usersService.getUsers();
   }
 
   @Query(() => User, { name: 'user' })
