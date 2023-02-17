@@ -13,7 +13,7 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string, password: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
+    const user = await this.usersService.findByUsername(username);
 
     const valid = bcrypt.compare(password, user?.password);
 
@@ -25,19 +25,52 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User) {
+  async login(user: User): Promise<any> {
     return {
-      access_token: this.jwtService.sign({
-        username: user.username,
-        sub: user.id,
-      }),
+      access_token: this.jwtService.sign(
+        {
+          username: user.username,
+          sub: user.id,
+        },
+        { expiresIn: '2m' },
+      ),
+      refresh_token: this.jwtService.sign(
+        {
+          username: user.username,
+          sub: user.id,
+        },
+        { expiresIn: '15m' },
+      ),
+      user,
+    };
+  }
+
+  async refresh(refreshToken: string): Promise<any> {
+    const decoded = this.jwtService.verify(refreshToken);
+    const user = await this.usersService.findByUsername(decoded.id);
+
+    if (!user) {
+      throw new Error('Invalid token');
+    }
+
+    return {
+      access_token: this.jwtService.sign(
+        {
+          username: user.username,
+          sub: user.id,
+        },
+        { expiresIn: '2m' },
+      ),
+      // Give new refresh token?
       user,
     };
   }
 
   async signup(loginUserInput: LoginUserInput) {
     // Use unique constraint on user id or user name
-    const user = await this.usersService.findOne(loginUserInput.username);
+    const user = await this.usersService.findByUsername(
+      loginUserInput.username,
+    );
 
     if (user) {
       throw new Error('User already exists!');

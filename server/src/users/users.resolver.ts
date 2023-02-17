@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 
 @Resolver(() => User)
@@ -17,6 +17,6 @@ export class UsersResolver {
 
   @Query(() => User, { name: 'user' })
   findOne(@Args('username') id: string) {
-    return this.usersService.findOne(id);
+    return this.usersService.findByUsername(id);
   }
 }

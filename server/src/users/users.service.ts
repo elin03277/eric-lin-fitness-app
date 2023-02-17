@@ -22,10 +22,12 @@ export class UsersService {
   }
 
   async getUser(id: string): Promise<User> {
-    return this.userRepository.findOneByOrFail({ id });
+    // | undefined> {
+    return this.userRepository.findOneBy({ id });
   }
 
-  async findOne(username: string): Promise<User> {
+  async findByUsername(username: string): Promise<User> {
+    // | undefined> {
     return this.userRepository.findOneBy({ username });
   }
 
