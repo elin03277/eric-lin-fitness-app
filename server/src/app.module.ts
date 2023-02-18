@@ -23,6 +23,12 @@ import { AuthModule } from './auth/auth.module';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
+      context: ({ req }) => ({ req }),
+      playground: {
+        settings: {
+          'request.credentials': 'include',
+        },
+      },
     }),
     ExerciseModule,
     WorkoutModule,

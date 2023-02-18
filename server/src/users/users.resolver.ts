@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
+import { SessionAuthGuard } from 'src/auth/guard/session-auth.guard';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -10,6 +11,7 @@ export class UsersResolver {
 
   @Query(() => [User], { name: 'users' })
   @UseGuards(JwtAuthGuard)
+  // @UseGuards(SessionAuthGuard)
   findAll() {
     // findAll(@Context() context) {} will make the user available in context.user
     return this.usersService.getUsers();

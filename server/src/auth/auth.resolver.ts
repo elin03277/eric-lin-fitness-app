@@ -4,14 +4,14 @@ import { User } from '../users/entities/user.entity';
 import { AuthService } from './auth.service';
 import { LoginResponse } from './dto/login-response';
 import { LoginUserInput } from './dto/login-user.input';
-import { GQLAuthGuard } from './guard/gql-auth.guard';
+import { LocalAuthGuard } from './guard/local-auth.guard';
 
 @Resolver()
 export class AuthResolver {
   constructor(private authService: AuthService) {}
 
   @Mutation(() => LoginResponse)
-  @UseGuards(GQLAuthGuard)
+  @UseGuards(LocalAuthGuard)
   login(
     @Args('loginUserInput') loginUserInput: LoginUserInput,
     @Context() context,
