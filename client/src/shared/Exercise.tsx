@@ -34,8 +34,8 @@ const Exercise = ({
       <p className="my-3">Instructions: {instructions}</p>
       <Link
         className="text-sm font-bold text-primary-500 underline hover:text-secondary-500"
-        onClick={() => setSelectedPage(SelectedPage.ContactUs)}
-        to={`/${SelectedPage.ContactUs}`}
+        onClick={() => setSelectedPage(SelectedPage.SignUp)}
+        to={`/${SelectedPage.SignUp}`}
       >
         <p>Learn More</p>
       </Link>

@@ -4,6 +4,8 @@ import Benefits from "@/scenes/benefits";
 import OurClasses from "@/scenes/ourClasses";
 import ContactUs from "@/scenes/contactUs";
 import Footer from "@/scenes/footer";
+import SignUp from "@/scenes/signUp";
+import LogIn from "@/scenes/logIn";
 import { useEffect, useState } from "react";
 import { SelectedPage } from "@/shared/types";
 import { Routes, Route, Navigate } from "react-router-dom";
@@ -35,8 +37,8 @@ function App() {
         setSelectedPage={setSelectedPage}
       />
       <Routes>
-        <Route path="/" element={<Navigate to="/home" />} />
-        <Route path="*" element={<Navigate to="/home" />} />
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="*" element={<Navigate to="/home" replace />} />
         <Route
           path="/home"
           element={<Home setSelectedPage={setSelectedPage} />}
@@ -56,6 +58,14 @@ function App() {
         <Route
           path="/add"
           element={<AddExercise setSelectedPage={setSelectedPage} />}
+        />
+        <Route
+          path="/signup"
+          element={<SignUp setSelectedPage={setSelectedPage} />}
+        />
+        <Route
+          path="/login"
+          element={<LogIn setSelectedPage={setSelectedPage} />}
         />
       </Routes>
       <Footer />
