@@ -19,6 +19,10 @@ export class ExerciseService {
     return this.exerciseRepository.findOneByOrFail({ id });
   }
 
+  // async getFilteredExercises(filter: string): Promise<Exercise[]> {
+  //   return this.exerciseRepository.find( filter );
+  // }
+
   async getExercises(offset: number, limit: number): Promise<Exercise[]> {
     return this.exerciseRepository.find({
       skip: offset,

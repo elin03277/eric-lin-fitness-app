@@ -11,7 +11,7 @@ type Props = {
   setSelectedPage: (value: SelectedPage) => void;
 };
 
-const SignUp = `
+const SignUpMutation = `
 mutation($loginUserInput: LoginUserInput!) {
     signup(loginUserInput: $loginUserInput) {
         username
@@ -19,13 +19,13 @@ mutation($loginUserInput: LoginUserInput!) {
   }
 `;
 
-const SignUpForm = ({ setSelectedPage }: Props) => {
+const SignUp = ({ setSelectedPage }: Props) => {
   const inputStyles = `mb-5 w-full rounded-lg bg-primary-300 px-5 py-3 placeholder-white`;
 
-  const [dataReceived, useDataReceived] = useState("");
-  const [textButton, setTextButton] = useState("CANCEL");
+  const [invisible, setInvisible] = useState<string>("");
+  const [textButton, setTextButton] = useState<string>("CANCEL");
 
-  const [{ data, fetching, error }, signUp] = useMutation(SignUp);
+  const [{ data, fetching, error }, signUp] = useMutation(SignUpMutation);
 
   const {
     register,
@@ -35,9 +35,8 @@ const SignUpForm = ({ setSelectedPage }: Props) => {
   } = useForm();
 
   const onSubmit = async (data: any = {}) => {
-    console.log(data);
     await signUp({ loginUserInput: data });
-    useDataReceived("invisible");
+    setInvisible("invisible");
     setTextButton("BACK");
     reset();
   };
@@ -120,7 +119,7 @@ const SignUpForm = ({ setSelectedPage }: Props) => {
               )}
               <button
                 type="submit"
-                className={`${dataReceived} mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`}
+                className={`${invisible} mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`}
               >
                 SUBMIT
               </button>
@@ -155,4 +154,4 @@ const SignUpForm = ({ setSelectedPage }: Props) => {
   );
 };
 
-export default SignUpForm;
+export default SignUp;

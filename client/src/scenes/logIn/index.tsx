@@ -5,13 +5,14 @@ import { Link } from "react-router-dom";
 import HText from "@/shared/HText";
 import { useMutation } from "urql";
 import Exercise from "@/shared/Exercise";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   setSelectedPage: (value: SelectedPage) => void;
+  setAccessToken: (value: string) => void;
 };
 
-const LogIn = `
+const LogInMutation = `
 mutation($loginUserInput: LoginUserInput!) {
     login(loginUserInput: $loginUserInput) {
         user {
@@ -22,13 +23,19 @@ mutation($loginUserInput: LoginUserInput!) {
   }
 `;
 
-const LogInForm = ({ setSelectedPage }: Props) => {
+const LogIn = ({ setSelectedPage, setAccessToken }: Props) => {
   const inputStyles = `mb-5 w-full rounded-lg bg-primary-300 px-5 py-3 placeholder-white`;
 
-  const [dataReceived, useDataReceived] = useState("");
-  const [textButton, setTextButton] = useState("CANCEL");
+  const [dataReceived, useDataReceived] = useState<string>("");
+  const [textButton, setTextButton] = useState<string>("CANCEL");
+  // const [token, setToken] = useState<string>("");
+  const [{ data, fetching, error }, logIn] = useMutation(LogInMutation);
 
-  const [{ data, fetching, error }, signUp] = useMutation(LogIn);
+  useEffect(() => {
+    if (data) {
+      setAccessToken(data.login.access_token);
+    }
+  }, [data]);
 
   const {
     register,
@@ -38,7 +45,7 @@ const LogInForm = ({ setSelectedPage }: Props) => {
   } = useForm();
 
   const onSubmit = async (data: any = {}) => {
-    await signUp({ loginUserInput: data });
+    await logIn({ loginUserInput: data });
     setTextButton("BACK");
     {
       /*reset();*/
@@ -46,9 +53,6 @@ const LogInForm = ({ setSelectedPage }: Props) => {
   };
 
   if (fetching) return null;
-  if (data) {
-    console.log(data.login.access_token);
-  }
 
   return (
     <div className="bg-gray-20">
@@ -150,11 +154,15 @@ const LogInForm = ({ setSelectedPage }: Props) => {
               hidden: { opacity: 0, y: 50 },
               visible: { opacity: 1, y: 0 },
             }}
-          ></motion.div>
+          >
+            {/* <div className="w-full before:absolute before:-bottom-20 before:-right-10 before:z-[-1] md:before:content-evolvetext">
+              {data ? <p>{`${data.login.access_token}`}</p> : <p></p>}
+            </div> */}
+          </motion.div>
         </div>
       </motion.div>
     </div>
   );
 };
 
-export default LogInForm;
+export default LogIn;

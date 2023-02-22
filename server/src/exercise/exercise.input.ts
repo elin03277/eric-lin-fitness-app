@@ -13,14 +13,6 @@ export class CreateExerciseInput {
 
   @Field()
   pattern: string;
-  // @Field((type) => [GraphQLString])
-  // primaryMuscles: string[];
-
-  // @Field((type) => [GraphQLString])
-  // secondaryMuscles: string[];
-
-  // @Field((type) => [GraphQLString])
-  // instructions: string[];
 
   @Field()
   instructions: string;

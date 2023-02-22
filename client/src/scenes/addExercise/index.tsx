@@ -9,6 +9,7 @@ import { useState } from "react";
 
 type Props = {
   setSelectedPage: (value: SelectedPage) => void;
+  accessToken: string;
 };
 
 const CreateExercise = `
@@ -22,12 +23,11 @@ const CreateExercise = `
     }
 `;
 
-const AddExercise = ({ setSelectedPage }: Props) => {
+const AddExercise = ({ setSelectedPage, accessToken }: Props) => {
   const inputStyles = `mb-5 w-full rounded-lg bg-primary-300 px-5 py-3 placeholder-white`;
 
-  const [dataReceived, useDataReceived] = useState(false);
-  const [textButton, setTextButton] = useState("CANCEL");
-
+  const [dataReceived, useDataReceived] = useState<boolean>(false);
+  const [textButton, setTextButton] = useState<string>("CANCEL");
   const [{ data, fetching, error }, createExercise] =
     useMutation(CreateExercise);
 
@@ -39,7 +39,16 @@ const AddExercise = ({ setSelectedPage }: Props) => {
   } = useForm();
 
   const onSubmit = async (data: any = {}) => {
-    await createExercise({ createExerciseInput: data });
+    try {
+      await createExercise(
+        { createExerciseInput: data },
+        {
+          fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
     useDataReceived(true);
     setTextButton("BACK");
     reset();

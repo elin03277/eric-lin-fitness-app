@@ -12,6 +12,8 @@ import { ExerciseService } from './exercise.service';
 import { CreateExerciseInput } from './exercise.input';
 import { Workout } from '../workout/workout.entity';
 import { GraphQLInt } from 'graphql';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 // Resolver of type exercise and this is where we define queries(retrieves data) or mutations(create new data or change existing data)
 @Resolver((of) => Exercise)
@@ -42,6 +44,7 @@ export class ExerciseResolver {
   }
 
   @Mutation((returns) => Exercise)
+  @UseGuards(JwtAuthGuard)
   createExercise(
     @Args('createExerciseInput') createExerciseInput: CreateExerciseInput,
   ) {

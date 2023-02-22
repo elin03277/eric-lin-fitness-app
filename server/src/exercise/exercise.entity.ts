@@ -32,18 +32,6 @@ export class Exercise {
   @Field()
   pattern: string;
 
-  // @Column()
-  // @Field((type) => [GraphQLString])
-  // primaryMuscles: string[];
-
-  // @Column()
-  // @Field((type) => [GraphQLString])
-  // secondaryMuscles: string[];
-
-  // @Column()
-  // @Field((type) => [GraphQLString])
-  // instructions: string[];
-
   @Column()
   @Field()
   instructions: string;
