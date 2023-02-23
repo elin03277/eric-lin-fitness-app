@@ -9,7 +9,7 @@ import {
 } from '@nestjs/graphql';
 import { Exercise } from './exercise.entity';
 import { ExerciseService } from './exercise.service';
-import { CreateExerciseInput } from './exercise.input';
+import { CreateExerciseInput } from './dto/exercise.input';
 import { Workout } from '../workout/workout.entity';
 import { GraphQLInt } from 'graphql';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
@@ -26,6 +26,11 @@ export class ExerciseResolver {
   }
 
   @Query((returns) => [Exercise])
+  getFilteredExercises(@Args('filter') filter: string) {
+    return this.exerciseService.getFilteredExercises(filter);
+  }
+
+  @Query((returns) => [Exercise])
   getExercises(
     @Args('offset', { type: () => Int }) offset: number,
     @Args('limit', { type: () => Int }) limit: number,
@@ -34,12 +39,12 @@ export class ExerciseResolver {
   }
 
   @Query((returns) => GraphQLInt)
-  countExercises(): Promise<number> {
+  countExercises() {
     return this.exerciseService.countExercises();
   }
 
   @ResolveField((returns) => Workout)
-  workout(@Parent() exercise: Exercise): Promise<Workout> {
+  workout(@Parent() exercise: Exercise) {
     return this.exerciseService.getWorkout(exercise.id);
   }
 

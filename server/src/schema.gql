@@ -45,6 +45,7 @@ type Query {
   countExercises: Int!
   exercise(id: String!): Exercise!
   getExercises(limit: Int!, offset: Int!): [Exercise!]!
+  getFilteredExercises(filter: String!): [Exercise!]!
   getWorkout(id: String!): Workout!
   getWorkouts: [Workout!]!
   user(username: String!): User!

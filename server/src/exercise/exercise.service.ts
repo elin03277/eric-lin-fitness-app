@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { Exercise } from './exercise.entity';
 import { v4 as uuid } from 'uuid';
-import { CreateExerciseInput } from './exercise.input';
+import { CreateExerciseInput } from './dto/exercise.input';
 import { WorkoutService } from '../workout/workout.service';
 import { Workout } from '../workout/workout.entity';
 
@@ -19,9 +19,20 @@ export class ExerciseService {
     return this.exerciseRepository.findOneByOrFail({ id });
   }
 
-  // async getFilteredExercises(filter: string): Promise<Exercise[]> {
-  //   return this.exerciseRepository.find( filter );
-  // }
+  async getFilteredExercises(filter: string): Promise<Exercise[]> {
+    const lcFilter = filter.toLowerCase();
+    const exercises = await this.exerciseRepository.find();
+
+    const filteredExercises = exercises.filter(
+      (exercise) =>
+        exercise.name.toLowerCase().includes(lcFilter) ||
+        exercise.equipment.toLowerCase().includes(lcFilter) ||
+        exercise.pattern.toLowerCase().includes(lcFilter) ||
+        exercise.instructions.toLowerCase().includes(lcFilter),
+    );
+
+    return filteredExercises;
+  }
 
   async getExercises(offset: number, limit: number): Promise<Exercise[]> {
     return this.exerciseRepository.find({
