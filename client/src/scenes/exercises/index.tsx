@@ -21,9 +21,10 @@ type Props = {
 
 const buttonStyle = `mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`;
 
-const GetExerciseQuery = `
-query($offset: Int!, $limit: Int!) {
-  getExercises(offset: $offset, limit: $limit) {
+const GetFilteredExerciseQuery = `
+query {
+  getFilteredExercises(filter: "ar") {
+    id
     name
     equipment
     pattern
@@ -40,17 +41,13 @@ query {
 
 const Exercises = ({ setSelectedPage }: Props) => {
   const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
-  const [offset, setOffset] = useState(0);
-  const [limit, setLimit] = useState(3);
-  const [pages, setPages] = useState(1);
-  const [prevInvisible, setPrevInvisible] = useState("invisible");
-  const [nextInvisible, setNextInvisible] = useState("");
-  const [previousExercises, setPreviousExercises] = useState<any[]>([]);
-  const [currentExercises, setCurrentExercises] = useState<any>(null);
+  const [offset, setOffset] = useState<number>(0);
+  const [limit, setLimit] = useState<number>(3);
+  const [exerciseList, setExerciseList] = useState([]);
 
   const [result] = useQuery({
-    query: GetExerciseQuery,
-    variables: { offset, limit },
+    query: GetFilteredExerciseQuery,
+    //variables: { offset, limit },
   });
 
   const [countResult] = useQuery({
@@ -58,7 +55,7 @@ const Exercises = ({ setSelectedPage }: Props) => {
   });
 
   const exercises = useMemo(
-    () => result.data?.getExercises || [],
+    () => result.data?.getFilteredExercises || [],
     [result.data]
   );
 
@@ -73,7 +70,8 @@ const Exercises = ({ setSelectedPage }: Props) => {
           <motion.div
             className="md:my-5 md:w-3/5"
             initial="hidden"
-            whileInView="visible"
+            // whileInView="visible"
+            animate="visible"
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.5 }}
             variants={{
@@ -81,7 +79,9 @@ const Exercises = ({ setSelectedPage }: Props) => {
               visible: { opacity: 1, x: 0 },
             }}
           >
-            <HText>START YOUR FITNESS JOURNEY TODAY!</HText>
+            <HText>
+              SEARCH FOR EXERCISES TO INCORPORATE IN YOUR NEXT WORKOUT!
+            </HText>
             <p className="my-5">
               Here are some example exercises to get you started! Feel free to
               add your own! 3 exercises need to be added for a new page to show!
@@ -89,7 +89,7 @@ const Exercises = ({ setSelectedPage }: Props) => {
             <Link to="/add">
               <button
                 type="button"
-                className="mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
+                className="invisible mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
               >
                 Add Exercise
               </button>
@@ -111,67 +111,10 @@ const Exercises = ({ setSelectedPage }: Props) => {
               instructions="Loading..."
               setSelectedPage={setSelectedPage}
             />
-            <Exercise
-              name="Loading Name..."
-              equipment="Loading..."
-              pattern="Loading..."
-              instructions="Loading..."
-              setSelectedPage={setSelectedPage}
-            />
-            <Exercise
-              name="Loading Name..."
-              equipment="Loading..."
-              pattern="Loading..."
-              instructions="Loading..."
-              setSelectedPage={setSelectedPage}
-            />
-          </motion.div>
-          <motion.div className="flex justify-between">
-            <button type="button" className={`${prevInvisible} ${buttonStyle}`}>
-              Prev
-            </button>
-            <button type="button" className={`${nextInvisible} ${buttonStyle}`}>
-              Next
-            </button>
           </motion.div>
         </motion.div>
       </div>
     );
-
-  const count = countResult.data;
-  const pageLimit = Math.floor(count.countExercises / limit);
-
-  const handlePreviousButton = () => {
-    console.log(pages);
-    pages === 2 ? setPrevInvisible("invisible") : setPrevInvisible("");
-    if (offset >= limit) {
-      setOffset(offset - limit);
-      setCurrentExercises(previousExercises[previousExercises.length - limit]);
-      setPreviousExercises(
-        previousExercises.slice(0, previousExercises.length - limit)
-      );
-      setNextInvisible("");
-      setPages(pages - 1);
-    }
-  };
-
-  const handleNextButton = (exercise: any[]) => {
-    pages + 1 < pageLimit
-      ? setNextInvisible("")
-      : setNextInvisible("invisible");
-    if (pages < pageLimit) {
-      setOffset(offset + limit);
-      setPreviousExercises([...previousExercises, currentExercises]);
-
-      previousExercises.includes(exercise)
-        ? setCurrentExercises(
-            previousExercises[previousExercises.length + limit]
-          )
-        : setCurrentExercises(exercise);
-      setPrevInvisible("");
-      setPages(pages + 1);
-    }
-  };
 
   return (
     <div className="bg-gray-20">
@@ -183,7 +126,8 @@ const Exercises = ({ setSelectedPage }: Props) => {
         <motion.div
           className="md:my-5 md:w-3/5"
           initial="hidden"
-          whileInView="visible"
+          animate="visible"
+          // whileInView="visible"
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.5 }}
           variants={{
@@ -191,9 +135,9 @@ const Exercises = ({ setSelectedPage }: Props) => {
             visible: { opacity: 1, x: 0 },
           }}
         >
-          <HText>START YOUR FITNESS JOURNEY TODAY!</HText>
+          <HText>SEARCH EXERCISES HERE!</HText>
           <p className="my-5">
-            Here are some example exercises to get you started! Feel free to add
+            Incorporate these exercises into your next workout! Feel free to add
             your own!
           </p>
           <Link to="/add">
@@ -208,13 +152,14 @@ const Exercises = ({ setSelectedPage }: Props) => {
 
         {/* EXERCISES */}
         <motion.div
-          className="mt-5 items-center justify-between gap-8 md:flex"
+          className="mt-5 items-center justify-between gap-8" // md:flex"
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.5 }}
+          animate="visible"
+          //whileInView="visible"
+          viewport={{ once: true }}
           variants={container}
         >
-          <Exercise
+          {/* <Exercise
             name={exercises[0].name}
             equipment={exercises[0].equipment}
             pattern={exercises[0].pattern}
@@ -227,30 +172,19 @@ const Exercises = ({ setSelectedPage }: Props) => {
             pattern={exercises[1].pattern}
             instructions={exercises[1].instructions}
             setSelectedPage={setSelectedPage}
-          />
-          <Exercise
-            name={exercises[2].name}
-            equipment={exercises[2].equipment}
-            pattern={exercises[2].pattern}
-            instructions={exercises[2].instructions}
-            setSelectedPage={setSelectedPage}
-          />
-        </motion.div>
-        <motion.div className="flex justify-between">
-          <button
-            type="button"
-            className={`${prevInvisible} ${buttonStyle}`}
-            onClick={handlePreviousButton}
-          >
-            Prev
-          </button>
-          <button
-            type="button"
-            className={`${nextInvisible} ${buttonStyle}`}
-            onClick={() => handleNextButton(exercises[0])}
-          >
-            Next
-          </button>
+          /> */}
+          {exercises.map(
+            ({ id, name, equipment, pattern, instructions }: any) => (
+              <Exercise
+                key={id}
+                name={name}
+                equipment={equipment}
+                pattern={pattern}
+                instructions={instructions}
+                setSelectedPage={setSelectedPage}
+              />
+            )
+          )}
         </motion.div>
       </motion.div>
     </div>

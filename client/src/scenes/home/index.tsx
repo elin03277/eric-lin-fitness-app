@@ -40,11 +40,11 @@ query {
 
 const Home = ({ setSelectedPage }: Props) => {
   const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
-  const [offset, setOffset] = useState(0);
-  const [limit, setLimit] = useState(3);
-  const [pages, setPages] = useState(1);
-  const [prevInvisible, setPrevInvisible] = useState("invisible");
-  const [nextInvisible, setNextInvisible] = useState("");
+  const [offset, setOffset] = useState<number>(0);
+  const [limit, setLimit] = useState<number>(3);
+  const [pages, setPages] = useState<number>(1);
+  const [prevInvisible, setPrevInvisible] = useState<string>("invisible");
+  const [nextInvisible, setNextInvisible] = useState<string>("");
   const [previousExercises, setPreviousExercises] = useState<any[]>([]);
   const [currentExercises, setCurrentExercises] = useState<any>(null);
 

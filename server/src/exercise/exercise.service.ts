@@ -20,15 +20,15 @@ export class ExerciseService {
   }
 
   async getFilteredExercises(filter: string): Promise<Exercise[]> {
-    const lcFilter = filter.toLowerCase();
+    const exerciseFilter = filter.toLowerCase();
     const exercises = await this.exerciseRepository.find();
 
     const filteredExercises = exercises.filter(
       (exercise) =>
-        exercise.name.toLowerCase().includes(lcFilter) ||
-        exercise.equipment.toLowerCase().includes(lcFilter) ||
-        exercise.pattern.toLowerCase().includes(lcFilter) ||
-        exercise.instructions.toLowerCase().includes(lcFilter),
+        exercise.name.toLowerCase().includes(exerciseFilter) ||
+        exercise.equipment.toLowerCase().includes(exerciseFilter) ||
+        exercise.pattern.toLowerCase().includes(exerciseFilter) ||
+        exercise.instructions.toLowerCase().includes(exerciseFilter),
     );
 
     return filteredExercises;
