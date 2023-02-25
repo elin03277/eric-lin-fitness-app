@@ -5,8 +5,9 @@ import { motion } from "framer-motion";
 import { useQuery } from "urql";
 import HText from "@/shared/HText";
 import Exercise from "@/shared/Exercise";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 const container = {
   hidden: {},
@@ -22,8 +23,8 @@ type Props = {
 const buttonStyle = `mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`;
 
 const GetFilteredExerciseQuery = `
-query {
-  getFilteredExercises(filter: "ar") {
+query ($filter: String!){
+  getFilteredExercises(filter: $filter) {
     id
     name
     equipment
@@ -43,11 +44,12 @@ const Exercises = ({ setSelectedPage }: Props) => {
   const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
   const [offset, setOffset] = useState<number>(0);
   const [limit, setLimit] = useState<number>(3);
+  const [filter, setFilter] = useState<string>("");
   const [exerciseList, setExerciseList] = useState([]);
 
-  const [result] = useQuery({
+  const [result, filterSearch] = useQuery({
     query: GetFilteredExerciseQuery,
-    //variables: { offset, limit },
+    variables: { filter },
   });
 
   const [countResult] = useQuery({
@@ -58,6 +60,19 @@ const Exercises = ({ setSelectedPage }: Props) => {
     () => result.data?.getFilteredExercises || [],
     [result.data]
   );
+
+  const inputStyles = `mb-5 w-full rounded-lg bg-primary-300 px-5 py-3 placeholder-white`;
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = async (data: any = {}) => {
+    setFilter(data.filter);
+  };
 
   if (result.fetching || countResult.fetching)
     return (
@@ -84,7 +99,7 @@ const Exercises = ({ setSelectedPage }: Props) => {
             </HText>
             <p className="my-5">
               Here are some example exercises to get you started! Feel free to
-              add your own! 3 exercises need to be added for a new page to show!
+              add your own!
             </p>
             <Link to="/add">
               <button
@@ -140,15 +155,44 @@ const Exercises = ({ setSelectedPage }: Props) => {
             Incorporate these exercises into your next workout! Feel free to add
             your own!
           </p>
+        </motion.div>
+
+        {/* SEARCH BAR */}
+        <div className=" mx-2 mt-2 justify-between gap-8">
+          <form className="basis-3/5 md:mt-0" onSubmit={handleSubmit(onSubmit)}>
+            <div className="mt-5 flex items-center justify-between gap-1">
+              <input
+                className={inputStyles}
+                type="text"
+                placeholder="Search Exercises..."
+                {...register("filter", {
+                  required: true,
+                  maxLength: 30,
+                })}
+              />
+              {errors.name && (
+                <p className="text-primary-500">
+                  {errors.name.type === "maxLength" && "Max length is 30 char."}
+                </p>
+              )}
+              <button
+                className=" mb-5 rounded-lg bg-primary-300 px-10 py-3 transition duration-500 hover:text-white"
+                type="submit"
+              >
+                Search
+              </button>
+            </div>
+          </form>
+
           <Link to="/add">
             <button
               type="button"
-              className="mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
+              className="mt-2 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
             >
               Add Exercise
             </button>
           </Link>
-        </motion.div>
+        </div>
 
         {/* EXERCISES */}
         <motion.div
@@ -159,20 +203,6 @@ const Exercises = ({ setSelectedPage }: Props) => {
           viewport={{ once: true }}
           variants={container}
         >
-          {/* <Exercise
-            name={exercises[0].name}
-            equipment={exercises[0].equipment}
-            pattern={exercises[0].pattern}
-            instructions={exercises[0].instructions}
-            setSelectedPage={setSelectedPage}
-          />
-          <Exercise
-            name={exercises[1].name}
-            equipment={exercises[1].equipment}
-            pattern={exercises[1].pattern}
-            instructions={exercises[1].instructions}
-            setSelectedPage={setSelectedPage}
-          /> */}
           {exercises.map(
             ({ id, name, equipment, pattern, instructions }: any) => (
               <Exercise

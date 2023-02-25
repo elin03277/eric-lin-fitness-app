@@ -41,7 +41,7 @@ query {
 const Home = ({ setSelectedPage }: Props) => {
   const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
   const [offset, setOffset] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(3);
+  const [limit, setLimit] = useState<number>(1);
   const [pages, setPages] = useState<number>(1);
   const [prevInvisible, setPrevInvisible] = useState<string>("invisible");
   const [nextInvisible, setNextInvisible] = useState<string>("");
@@ -84,7 +84,7 @@ const Home = ({ setSelectedPage }: Props) => {
             <HText>START YOUR FITNESS JOURNEY TODAY!</HText>
             <p className="my-5">
               Here are some example exercises to get you started! Feel free to
-              add your own! 3 exercises need to be added for a new page to show!
+              add your own!
             </p>
             <Link to="/add">
               <button
@@ -98,26 +98,13 @@ const Home = ({ setSelectedPage }: Props) => {
 
           {/* EXERCISES */}
           <motion.div
-            className="mt-5 items-center justify-between gap-8 md:flex"
+            className="mt-5 items-center justify-between gap-8" // md:flex"
             initial="hidden"
-            whileInView="visible"
+            // whileInView="visible"
+            animate="visible"
             viewport={{ once: true, amount: 0.5 }}
             variants={container}
           >
-            <Exercise
-              name="Loading Name..."
-              equipment="Loading..."
-              pattern="Loading..."
-              instructions="Loading..."
-              setSelectedPage={setSelectedPage}
-            />
-            <Exercise
-              name="Loading Name..."
-              equipment="Loading..."
-              pattern="Loading..."
-              instructions="Loading..."
-              setSelectedPage={setSelectedPage}
-            />
             <Exercise
               name="Loading Name..."
               equipment="Loading..."
@@ -208,13 +195,13 @@ const Home = ({ setSelectedPage }: Props) => {
 
         {/* EXERCISES */}
         <motion.div
-          className="mt-5 items-center justify-between gap-8 md:flex"
+          className="mt-5 items-center justify-between gap-8" // md:flex"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.5 }}
           variants={container}
         >
-          <Exercise
+          {/* <Exercise
             name={exercises[0].name}
             equipment={exercises[0].equipment}
             pattern={exercises[0].pattern}
@@ -234,7 +221,19 @@ const Home = ({ setSelectedPage }: Props) => {
             pattern={exercises[2].pattern}
             instructions={exercises[2].instructions}
             setSelectedPage={setSelectedPage}
-          />
+          /> */}
+          {exercises.map(
+            ({ id, name, equipment, pattern, instructions }: any) => (
+              <Exercise
+                key={id}
+                name={name}
+                equipment={equipment}
+                pattern={pattern}
+                instructions={instructions}
+                setSelectedPage={setSelectedPage}
+              />
+            )
+          )}
         </motion.div>
         <motion.div className="flex justify-between">
           <button

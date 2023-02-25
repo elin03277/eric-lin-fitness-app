@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import HText from "@/shared/HText";
 import { useMutation } from "urql";
-import Exercise from "@/shared/Exercise";
 import { useEffect, useState } from "react";
 
 type Props = {

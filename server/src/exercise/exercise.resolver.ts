@@ -10,6 +10,7 @@ import {
 import { Exercise } from './exercise.entity';
 import { ExerciseService } from './exercise.service';
 import { CreateExerciseInput } from './dto/exercise.input';
+import { ExerciseFilterInput } from './dto/exercise-filter.input';
 import { Workout } from '../workout/workout.entity';
 import { GraphQLInt } from 'graphql';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
