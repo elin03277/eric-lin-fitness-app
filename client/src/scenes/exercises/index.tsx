@@ -45,7 +45,6 @@ const Exercises = ({ setSelectedPage }: Props) => {
   const [offset, setOffset] = useState<number>(0);
   const [limit, setLimit] = useState<number>(3);
   const [filter, setFilter] = useState<string>("");
-  const [exerciseList, setExerciseList] = useState([]);
 
   const [result, filterSearch] = useQuery({
     query: GetFilteredExerciseQuery,

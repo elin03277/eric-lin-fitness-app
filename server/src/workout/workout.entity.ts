@@ -22,14 +22,14 @@ export class Workout {
   @Field()
   name: string;
 
-  // @Column()
-  // @Field()
-  // exercises: string[];
+  @Column()
+  @Field()
+  type: string;
 
   @Column()
-  @ManyToMany(() => Exercise, (exercise) => exercise.workout)
-  @Field((type) => Exercise, { nullable: true })
-  exercises?: Exercise;
+  // @ManyToMany(() => Exercise, (exercise) => exercise.workouts)
+  @Field((type) => [ID]) //, { nullable: true })
+  exerciseIds: string[];
 
   //   @Column()
   //   @Field((type) => [Int])

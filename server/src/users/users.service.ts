@@ -34,4 +34,21 @@ export class UsersService {
   async getUsers(): Promise<User[]> {
     return this.userRepository.find();
   }
+
+  async assignExerciseToUser(
+    userId: string,
+    exerciseId: string,
+  ): Promise<User> {
+    const user = await this.getUser(userId);
+    user.exerciseIds = [...user.exerciseIds, exerciseId];
+
+    return user;
+  }
+
+  async assignWorkoutToUser(userId: string, workoutId: string): Promise<User> {
+    const user = await this.getUser(userId);
+    user.workoutIds = [...user.workoutIds, workoutId];
+
+    return user;
+  }
 }

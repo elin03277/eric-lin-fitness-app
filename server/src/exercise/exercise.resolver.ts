@@ -1,5 +1,6 @@
 import {
   Args,
+  ID,
   Int,
   Mutation,
   Parent,
@@ -35,7 +36,7 @@ export class ExerciseResolver {
   getExercises(
     @Args('offset', { type: () => Int }) offset: number,
     @Args('limit', { type: () => Int }) limit: number,
-  ): Promise<Exercise[]> {
+  ) {
     return this.exerciseService.getExercises(offset, limit);
   }
 
@@ -44,9 +45,17 @@ export class ExerciseResolver {
     return this.exerciseService.countExercises();
   }
 
-  @ResolveField((returns) => Workout)
-  workout(@Parent() exercise: Exercise) {
-    return this.exerciseService.getWorkout(exercise.id);
+  // @ResolveField((returns) => Workout)
+  // workout(@Parent() exercise: Exercise) {
+  //   return this.exerciseService.getWorkout(exercise.id);
+  // }
+
+  @Mutation((returns) => [ID])
+  assignWorkoutToExercise(
+    @Args('exerciseId', { type: () => ID }) exerciseId: string,
+    @Args('workoutId', { type: () => ID }) workoutId: string,
+  ) {
+    return this.exerciseService.assignWorkoutToExercise(exerciseId, workoutId);
   }
 
   @Mutation((returns) => Exercise)

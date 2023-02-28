@@ -37,10 +37,10 @@ export class Exercise {
   instructions: string;
 
   @Column()
-  @Field((type) => [GraphQLString], { nullable: true })
-  workoutId: string[];
+  @Field((type) => [ID], { nullable: true })
+  workoutIds?: string[];
 
-  @ManyToMany(() => Workout, (workout) => workout.exercises)
-  @Field((type) => Workout, { nullable: true })
-  workout: Workout;
+  // @ManyToMany(() => Workout, (workout) => workout.exercises)
+  // @Field((type) => Workout, { nullable: true })
+  // workouts?: Workout[];
 }

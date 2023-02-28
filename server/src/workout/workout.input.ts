@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 import { IsString } from 'class-validator';
 import { GraphQLString } from 'graphql';
 import { Exercise } from 'src/exercise/exercise.entity';
@@ -9,9 +9,12 @@ export class CreateWorkoutInput {
   @Field()
   name: string;
 
+  @Field()
+  type: string;
+
   // @Field((type) => [GraphQLString])
   // exercises: string[];
 
-  //   @Field((type) => [Exercise])
-  //   exercises: Exercise[];
+  @Field((type) => [ID])
+  exerciseIds: string[];
 }
