@@ -21,10 +21,10 @@ export class User {
   password: string;
 
   @Column()
-  @Field((type) => [ID], { nullable: true })
-  exerciseIds?: string[];
+  @Field((type) => [GraphQLString])
+  exerciseIds: string[];
 
   @Column()
-  @Field((type) => [ID], { nullable: true })
+  @Field((type) => [GraphQLString], { nullable: true })
   workoutIds?: string[];
 }

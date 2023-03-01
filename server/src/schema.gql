@@ -10,7 +10,9 @@ input CreateExerciseInput {
 }
 
 input CreateWorkoutInput {
+  exerciseIds: [ID!]!
   name: String!
+  type: String!
 }
 
 type Exercise {
@@ -19,8 +21,7 @@ type Exercise {
   instructions: String!
   name: String!
   pattern: String!
-  workout: Workout
-  workoutId: [String!]
+  workoutIds: [ID!]
 }
 
 type LoginResponse {
@@ -35,6 +36,9 @@ input LoginUserInput {
 }
 
 type Mutation {
+  assignExerciseToUser(exerciseId: String!, userId: String!): User!
+  assignWorkoutToExercise(exerciseId: ID!, workoutId: ID!): [ID!]!
+  assignWorkoutToUser(userId: ID!, workoutId: ID!): User!
   createExercise(createExerciseInput: CreateExerciseInput!): Exercise!
   createWorkout(createWorkoutInput: CreateWorkoutInput!): Workout!
   login(loginUserInput: LoginUserInput!): LoginResponse!
@@ -53,13 +57,16 @@ type Query {
 }
 
 type User {
+  exerciseIds: [String!]!
   id: ID!
   password: String!
   username: String!
+  workoutIds: [String!]
 }
 
 type Workout {
-  exercises: Exercise
+  exerciseIds: [ID!]!
   id: ID!
   name: String!
+  type: String!
 }

@@ -16,6 +16,7 @@ export class UsersService {
     const user = this.userRepository.create({
       id: uuid(),
       ...createUserInput,
+      exerciseIds: [],
     });
 
     return this.userRepository.save(user);
@@ -41,14 +42,16 @@ export class UsersService {
   ): Promise<User> {
     const user = await this.getUser(userId);
     user.exerciseIds = [...user.exerciseIds, exerciseId];
+    this.userRepository.update(user._id, { exerciseIds: user.exerciseIds });
 
-    return user;
+    return this.getUser(userId);
   }
 
   async assignWorkoutToUser(userId: string, workoutId: string): Promise<User> {
     const user = await this.getUser(userId);
     user.workoutIds = [...user.workoutIds, workoutId];
+    this.userRepository.update(user._id, { workoutIds: user.workoutIds });
 
-    return user;
+    return this.getUser(userId);
   }
 }

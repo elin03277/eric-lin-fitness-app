@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
@@ -10,7 +10,7 @@ export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Query(() => [User], { name: 'users' })
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   // @UseGuards(SessionAuthGuard)
   findAll() {
     // findAll(@Context() context) {} will make the user available in context.user
@@ -20,5 +20,21 @@ export class UsersResolver {
   @Query(() => User, { name: 'user' })
   findOne(@Args('username') id: string) {
     return this.usersService.findByUsername(id);
+  }
+
+  @Mutation((returns) => User)
+  assignExerciseToUser(
+    @Args('userId') userId: string,
+    @Args('exerciseId') exerciseId: string,
+  ) {
+    return this.usersService.assignExerciseToUser(userId, exerciseId);
+  }
+
+  @Mutation((returns) => User)
+  assignWorkoutToUser(
+    @Args('userId', { type: () => ID }) userId: string,
+    @Args('workoutId', { type: () => ID }) workoutId: string,
+  ) {
+    return this.usersService.assignWorkoutToUser(userId, workoutId);
   }
 }
