@@ -69,15 +69,19 @@ export class ExerciseService {
     return this.exerciseRepository.save(exercise);
   }
 
-  async assignWorkoutToExercise(
-    exerciseId: string,
-    workoutId: string,
-  ): Promise<string[]> {
-    const exercise = await this.getExercise(exerciseId);
-    exercise.workoutIds = [...exercise.workoutIds, workoutId];
+  // async assignWorkoutToExercise(
+  //   exerciseId: string,
+  //   workoutId: string,
+  // ): Promise<string[]> {
+  //   const exercise = await this.getExercise(exerciseId);
+  //   exercise.workoutIds = [...exercise.workoutIds, workoutId];
 
-    return exercise.workoutIds;
-  }
+  //   this.exerciseRepository.update(exercise._id, {
+  //     workoutIds: exercise.workoutIds,
+  //   });
+
+  //   return exercise.workoutIds;
+  // }
 
   async getWorkout(workoutId: string): Promise<Workout> {
     return this.workoutService.getWorkout(workoutId);

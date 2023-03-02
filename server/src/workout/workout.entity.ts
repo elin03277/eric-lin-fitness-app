@@ -3,7 +3,7 @@ import { Exercise } from 'src/exercise/exercise.entity';
 import {
   Column,
   Entity,
-  ManyToMany,
+  // ManyToMany,
   ObjectIdColumn,
   PrimaryColumn,
 } from 'typeorm';

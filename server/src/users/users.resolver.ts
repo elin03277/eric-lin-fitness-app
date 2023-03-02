@@ -32,8 +32,8 @@ export class UsersResolver {
 
   @Mutation((returns) => User)
   assignWorkoutToUser(
-    @Args('userId', { type: () => ID }) userId: string,
-    @Args('workoutId', { type: () => ID }) workoutId: string,
+    @Args('userId') userId: string,
+    @Args('workoutId') workoutId: string,
   ) {
     return this.usersService.assignWorkoutToUser(userId, workoutId);
   }

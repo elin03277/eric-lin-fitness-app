@@ -44,7 +44,7 @@ export class UsersService {
     user.exerciseIds = [...user.exerciseIds, exerciseId];
     this.userRepository.update(user._id, { exerciseIds: user.exerciseIds });
 
-    return this.getUser(userId);
+    return user;
   }
 
   async assignWorkoutToUser(userId: string, workoutId: string): Promise<User> {
@@ -52,6 +52,6 @@ export class UsersService {
     user.workoutIds = [...user.workoutIds, workoutId];
     this.userRepository.update(user._id, { workoutIds: user.workoutIds });
 
-    return this.getUser(userId);
+    return user;
   }
 }

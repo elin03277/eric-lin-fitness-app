@@ -50,13 +50,13 @@ export class ExerciseResolver {
   //   return this.exerciseService.getWorkout(exercise.id);
   // }
 
-  @Mutation((returns) => [ID])
-  assignWorkoutToExercise(
-    @Args('exerciseId', { type: () => ID }) exerciseId: string,
-    @Args('workoutId', { type: () => ID }) workoutId: string,
-  ) {
-    return this.exerciseService.assignWorkoutToExercise(exerciseId, workoutId);
-  }
+  // @Mutation((returns) => [ID])
+  // assignWorkoutToExercise(
+  //   @Args('exerciseId', { type: () => ID }) exerciseId: string,
+  //   @Args('workoutId', { type: () => ID }) workoutId: string,
+  // ) {
+  //   return this.exerciseService.assignWorkoutToExercise(exerciseId, workoutId);
+  // }
 
   @Mutation((returns) => Exercise)
   @UseGuards(JwtAuthGuard)

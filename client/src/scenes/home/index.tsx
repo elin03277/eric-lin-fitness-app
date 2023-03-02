@@ -86,7 +86,7 @@ const Home = ({ setSelectedPage }: Props) => {
               Here are some example exercises to get you started! Feel free to
               add your own!
             </p>
-            <Link to="/add">
+            <Link to="/addExercise">
               <button
                 type="button"
                 className="mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
@@ -183,7 +183,7 @@ const Home = ({ setSelectedPage }: Props) => {
             Here are some example exercises to get you started! Feel free to add
             your own!
           </p>
-          <Link to="/add">
+          <Link to="/addExercise">
             <button
               type="button"
               className="mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"

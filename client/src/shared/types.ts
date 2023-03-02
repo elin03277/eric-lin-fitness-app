@@ -6,6 +6,7 @@ export enum SelectedPage {
   SignUp = "signup",
   LogIn = "login",
   Exercises = "exercises",
+  Workouts = "workouts",
 }
 
 export interface BenefitType {
@@ -25,4 +26,10 @@ export interface ExerciseType {
   equipment: string;
   pattern: string;
   instructions: string;
+}
+
+export interface WorkoutType {
+  name: string;
+  type: string;
+  description: string;
 }

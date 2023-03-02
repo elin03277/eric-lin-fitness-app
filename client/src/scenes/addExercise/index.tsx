@@ -59,7 +59,7 @@ const AddExercise = ({ setSelectedPage, accessToken }: Props) => {
   return (
     <div className="bg-gray-20">
       <motion.div
-        onViewportEnter={() => setSelectedPage(SelectedPage.Home)}
+        onViewportEnter={() => setSelectedPage(SelectedPage.Exercises)}
         className="mx-auto w-5/6 pt-24 pb-32"
       >
         {/* HEADER */}

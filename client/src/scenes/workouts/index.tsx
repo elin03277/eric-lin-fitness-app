@@ -1,6 +1,6 @@
 import useMediaQuery from "@/hooks/useMediaQuery";
 import ActionButton from "@/shared/ActionButton";
-import { ExerciseType, SelectedPage } from "@/shared/types";
+import { ExerciseType, SelectedPage, WorkoutType } from "@/shared/types";
 import { motion } from "framer-motion";
 import { useQuery } from "urql";
 import HText from "@/shared/HText";
@@ -8,6 +8,7 @@ import Exercise from "@/shared/Exercise";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import Workout from "./Workout";
 
 const container = {
   hidden: {},
@@ -22,63 +23,33 @@ type Props = {
 
 const buttonStyle = `mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`;
 
-const GetFilteredExerciseQuery = `
-query ($filter: String!){
-  getFilteredExercises(filter: $filter) {
+const GetWorkouts = `
+query {
+  getWorkouts {
     id
     name
-    equipment
-    pattern
-    instructions
+    type
+    exerciseIds
   }
 }
 `;
 
-const GetExerciseCount = `
-query {
-  countExercises
-}
-`;
-
-const Exercises = ({ setSelectedPage }: Props) => {
+const Workouts = ({ setSelectedPage }: Props) => {
   const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
-  const [offset, setOffset] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(3);
-  const [filter, setFilter] = useState<string>("");
 
-  const [result, filterSearch] = useQuery({
-    query: GetFilteredExerciseQuery,
-    variables: { filter },
+  const [result, getWorkouts] = useQuery({
+    query: GetWorkouts,
   });
 
-  const [countResult] = useQuery({
-    query: GetExerciseCount,
-  });
-
-  const exercises = useMemo(
-    () => result.data?.getFilteredExercises || [],
-    [result.data]
-  );
-
+  const workouts = useMemo(() => result.data?.getWorkouts || [], [result.data]);
   const inputStyles = `mb-5 w-full rounded-lg bg-primary-300 px-5 py-3 placeholder-white`;
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm();
-
-  const onSubmit = async (data: any = {}) => {
-    setFilter(data.filter);
-  };
-
-  if (result.fetching || countResult.fetching)
+  if (result.fetching)
     return (
       <div className="bg-gray-20">
         <motion.div
           className="mx-auto w-5/6  gap-16 py-20 md:h-full"
-          onViewportEnter={() => setSelectedPage(SelectedPage.Exercises)}
+          onViewportEnter={() => setSelectedPage(SelectedPage.Workouts)}
         >
           {/* HEADER */}
           <motion.div
@@ -93,12 +64,12 @@ const Exercises = ({ setSelectedPage }: Props) => {
               visible: { opacity: 1, x: 0 },
             }}
           >
-            <HText>SEARCH EXERCISES HERE!</HText>
+            <HText>FIND YOUR NEXT WORKOUT HERE!</HText>
             <p className="my-5">
-              Incorporate these exercises into your next workout! Feel free to
+              Here are some example workouts to get you started! Feel free to
               add your own!
             </p>
-            <Link to="/addExercise">
+            <Link to="/addWorkout">
               <button
                 type="button"
                 className="invisible mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
@@ -132,7 +103,7 @@ const Exercises = ({ setSelectedPage }: Props) => {
     <div className="bg-gray-20">
       <motion.div
         className="mx-auto w-5/6  gap-16 py-20 md:h-full"
-        onViewportEnter={() => setSelectedPage(SelectedPage.Exercises)}
+        onViewportEnter={() => setSelectedPage(SelectedPage.Workouts)}
       >
         {/* HEADER */}
         <motion.div
@@ -147,49 +118,20 @@ const Exercises = ({ setSelectedPage }: Props) => {
             visible: { opacity: 1, x: 0 },
           }}
         >
-          <HText>SEARCH EXERCISES HERE!</HText>
+          <HText>FIND YOUR NEXT WORKOUT HERE!</HText>
           <p className="my-5">
-            Incorporate these exercises into your next workout! Feel free to add
+            Here are some example workouts to get you started! Feel free to add
             your own!
           </p>
-        </motion.div>
-
-        {/* SEARCH BAR */}
-        <div className=" mx-2 mt-2 justify-between gap-8">
-          <form className="basis-3/5 md:mt-0" onSubmit={handleSubmit(onSubmit)}>
-            <div className="mt-5 flex items-center justify-between gap-1">
-              <input
-                className={inputStyles}
-                type="text"
-                placeholder="Search Exercises..."
-                {...register("filter", {
-                  required: true,
-                  maxLength: 30,
-                })}
-              />
-              {errors.name && (
-                <p className="text-primary-500">
-                  {errors.name.type === "maxLength" && "Max length is 30 char."}
-                </p>
-              )}
-              <button
-                className=" mb-5 rounded-lg bg-primary-300 px-10 py-3 transition duration-500 hover:text-white"
-                type="submit"
-              >
-                Search
-              </button>
-            </div>
-          </form>
-
-          <Link to="/addExercise">
+          <Link to="/addWorkout">
             <button
               type="button"
-              className="mt-2 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
+              className="mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
             >
-              Add Exercise
+              Add Workout
             </button>
           </Link>
-        </div>
+        </motion.div>
 
         {/* EXERCISES */}
         <motion.div
@@ -200,22 +142,32 @@ const Exercises = ({ setSelectedPage }: Props) => {
           viewport={{ once: true }}
           variants={container}
         >
-          {exercises.map(
-            ({ id, name, equipment, pattern, instructions }: any) => (
-              <Exercise
-                key={id}
-                name={name}
-                equipment={equipment}
-                pattern={pattern}
-                instructions={instructions}
-                setSelectedPage={setSelectedPage}
-              />
-            )
-          )}
+          {workouts.map(({ id, name, equipment, type, description }: any) => (
+            <Exercise
+              key={id}
+              name={name}
+              equipment={equipment}
+              pattern={type}
+              instructions={description}
+              setSelectedPage={setSelectedPage}
+            />
+          ))}
         </motion.div>
+        <div className="mt-10 h-[353px] w-full overflow-x-auto overflow-y-hidden">
+          <ul className="w-[2800px] whitespace-nowrap">
+            {workouts.map((item: WorkoutType, index: number) => (
+              <Workout
+                key={`${item.name}-${index}`}
+                name={item.name}
+                description={item.description}
+                type={item.type}
+              />
+            ))}
+          </ul>
+        </div>
       </motion.div>
     </div>
   );
 };
 
-export default Exercises;
+export default Workouts;

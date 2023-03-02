@@ -40,7 +40,7 @@ query {
 }
 `;
 
-const Exercises = ({ setSelectedPage }: Props) => {
+const AddWorkout = ({ setSelectedPage }: Props) => {
   const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
   const [offset, setOffset] = useState<number>(0);
   const [limit, setLimit] = useState<number>(3);
@@ -78,7 +78,7 @@ const Exercises = ({ setSelectedPage }: Props) => {
       <div className="bg-gray-20">
         <motion.div
           className="mx-auto w-5/6  gap-16 py-20 md:h-full"
-          onViewportEnter={() => setSelectedPage(SelectedPage.Exercises)}
+          onViewportEnter={() => setSelectedPage(SelectedPage.Workouts)}
         >
           {/* HEADER */}
           <motion.div
@@ -93,19 +93,10 @@ const Exercises = ({ setSelectedPage }: Props) => {
               visible: { opacity: 1, x: 0 },
             }}
           >
-            <HText>SEARCH EXERCISES HERE!</HText>
+            <HText>MAKE YOUR OWN WORKOUT!</HText>
             <p className="my-5">
-              Incorporate these exercises into your next workout! Feel free to
-              add your own!
+              Search for exercises and add them to your workout!
             </p>
-            <Link to="/addExercise">
-              <button
-                type="button"
-                className="invisible mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
-              >
-                Add Exercise
-              </button>
-            </Link>
           </motion.div>
 
           {/* EXERCISES */}
@@ -132,7 +123,7 @@ const Exercises = ({ setSelectedPage }: Props) => {
     <div className="bg-gray-20">
       <motion.div
         className="mx-auto w-5/6  gap-16 py-20 md:h-full"
-        onViewportEnter={() => setSelectedPage(SelectedPage.Exercises)}
+        onViewportEnter={() => setSelectedPage(SelectedPage.Workouts)}
       >
         {/* HEADER */}
         <motion.div
@@ -147,12 +138,13 @@ const Exercises = ({ setSelectedPage }: Props) => {
             visible: { opacity: 1, x: 0 },
           }}
         >
-          <HText>SEARCH EXERCISES HERE!</HText>
+          <HText>MAKE YOUR OWN WORKOUT!</HText>
           <p className="my-5">
-            Incorporate these exercises into your next workout! Feel free to add
-            your own!
+            Search for exercises and add them to your workout!
           </p>
         </motion.div>
+
+        {/* WORKOUT FORM */}
 
         {/* SEARCH BAR */}
         <div className=" mx-2 mt-2 justify-between gap-8">
@@ -180,15 +172,6 @@ const Exercises = ({ setSelectedPage }: Props) => {
               </button>
             </div>
           </form>
-
-          <Link to="/addExercise">
-            <button
-              type="button"
-              className="mt-2 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
-            >
-              Add Exercise
-            </button>
-          </Link>
         </div>
 
         {/* EXERCISES */}
@@ -218,4 +201,4 @@ const Exercises = ({ setSelectedPage }: Props) => {
   );
 };
 
-export default Exercises;
+export default AddWorkout;

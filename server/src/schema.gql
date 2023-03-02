@@ -10,7 +10,7 @@ input CreateExerciseInput {
 }
 
 input CreateWorkoutInput {
-  exerciseIds: [ID!]!
+  exerciseIds: [String!]!
   name: String!
   type: String!
 }
@@ -37,8 +37,7 @@ input LoginUserInput {
 
 type Mutation {
   assignExerciseToUser(exerciseId: String!, userId: String!): User!
-  assignWorkoutToExercise(exerciseId: ID!, workoutId: ID!): [ID!]!
-  assignWorkoutToUser(userId: ID!, workoutId: ID!): User!
+  assignWorkoutToUser(userId: String!, workoutId: String!): User!
   createExercise(createExerciseInput: CreateExerciseInput!): Exercise!
   createWorkout(createWorkoutInput: CreateWorkoutInput!): Workout!
   login(loginUserInput: LoginUserInput!): LoginResponse!
