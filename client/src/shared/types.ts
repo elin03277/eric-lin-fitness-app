@@ -22,6 +22,7 @@ export interface ClassType {
 }
 
 export interface ExerciseType {
+  id: string;
   name: string;
   equipment: string;
   pattern: string;
@@ -29,6 +30,7 @@ export interface ExerciseType {
 }
 
 export interface WorkoutType {
+  id: string;
   name: string;
   type: string;
   description: string;

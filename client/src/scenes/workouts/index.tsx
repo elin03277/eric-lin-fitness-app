@@ -69,32 +69,34 @@ const Workouts = ({ setSelectedPage }: Props) => {
               Here are some example workouts to get you started! Feel free to
               add your own!
             </p>
-            <Link to="/addWorkout">
-              <button
-                type="button"
-                className="invisible mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
-              >
-                Add Exercise
-              </button>
-            </Link>
+            <button
+              type="button"
+              className="invisible mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
+            >
+              Add Exercise
+            </button>
           </motion.div>
 
-          {/* EXERCISES */}
-          <motion.div
-            className="mt-5 items-center justify-between gap-8 md:flex"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.5 }}
-            variants={container}
-          >
-            <Exercise
-              name="Loading Name..."
-              equipment="Loading..."
-              pattern="Loading..."
-              instructions="Loading..."
-              setSelectedPage={setSelectedPage}
-            />
-          </motion.div>
+          {/* WORKOUTS */}
+          <div className="mt-10 h-[353px] w-full overflow-x-auto overflow-y-hidden">
+            <ul className="w-[2800px] whitespace-nowrap">
+              <Workout
+                name="Loading..."
+                description="Loading..."
+                type="Loading..."
+              />
+              <Workout
+                name="Loading..."
+                description="Loading..."
+                type="Loading..."
+              />
+              <Workout
+                name="Loading..."
+                description="Loading..."
+                type="Loading..."
+              />
+            </ul>
+          </div>
         </motion.div>
       </div>
     );
@@ -133,34 +135,15 @@ const Workouts = ({ setSelectedPage }: Props) => {
           </Link>
         </motion.div>
 
-        {/* EXERCISES */}
-        <motion.div
-          className="mt-5 items-center justify-between gap-8" // md:flex"
-          initial="hidden"
-          animate="visible"
-          //whileInView="visible"
-          viewport={{ once: true }}
-          variants={container}
-        >
-          {workouts.map(({ id, name, equipment, type, description }: any) => (
-            <Exercise
-              key={id}
-              name={name}
-              equipment={equipment}
-              pattern={type}
-              instructions={description}
-              setSelectedPage={setSelectedPage}
-            />
-          ))}
-        </motion.div>
+        {/* WORKOUTS */}
         <div className="mt-10 h-[353px] w-full overflow-x-auto overflow-y-hidden">
           <ul className="w-[2800px] whitespace-nowrap">
-            {workouts.map((item: WorkoutType, index: number) => (
+            {workouts.map((workout: WorkoutType) => (
               <Workout
-                key={`${item.name}-${index}`}
-                name={item.name}
-                description={item.description}
-                type={item.type}
+                key={workout.id}
+                name={workout.name}
+                description={workout.description}
+                type={workout.type}
               />
             ))}
           </ul>

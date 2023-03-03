@@ -98,14 +98,12 @@ const Exercises = ({ setSelectedPage }: Props) => {
               Incorporate these exercises into your next workout! Feel free to
               add your own!
             </p>
-            <Link to="/addExercise">
-              <button
-                type="button"
-                className="invisible mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
-              >
-                Add Exercise
-              </button>
-            </Link>
+            <button
+              type="button"
+              className="invisible mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
+            >
+              Add Exercise
+            </button>
           </motion.div>
 
           {/* EXERCISES */}
@@ -163,20 +161,22 @@ const Exercises = ({ setSelectedPage }: Props) => {
                 type="text"
                 placeholder="Search Exercises..."
                 {...register("filter", {
-                  required: true,
                   maxLength: 30,
                 })}
               />
-              {errors.name && (
+              {/* {errorsFilter.filter && (
                 <p className="text-primary-500">
-                  {errors.name.type === "maxLength" && "Max length is 30 char."}
+                  {errorsFilter.filter.type === "maxLength" &&
+                    "Max length is 30 char."}
                 </p>
-              )}
+              )} */}
               <button
-                className=" mb-5 rounded-lg bg-primary-300 px-10 py-3 transition duration-500 hover:text-white"
+                className="mb-5 whitespace-nowrap rounded-lg bg-primary-300 px-10 py-3 transition duration-500 hover:text-white"
                 type="submit"
               >
-                Search
+                {errors.filter && errors.filter.type === "maxLength"
+                  ? "Max length 30 char"
+                  : "Search"}
               </button>
             </div>
           </form>
@@ -200,18 +200,16 @@ const Exercises = ({ setSelectedPage }: Props) => {
           viewport={{ once: true }}
           variants={container}
         >
-          {exercises.map(
-            ({ id, name, equipment, pattern, instructions }: any) => (
-              <Exercise
-                key={id}
-                name={name}
-                equipment={equipment}
-                pattern={pattern}
-                instructions={instructions}
-                setSelectedPage={setSelectedPage}
-              />
-            )
-          )}
+          {exercises.map((exercise: ExerciseType) => (
+            <Exercise
+              key={exercise.id}
+              name={exercise.name}
+              equipment={exercise.equipment}
+              pattern={exercise.pattern}
+              instructions={exercise.instructions}
+              setSelectedPage={setSelectedPage}
+            />
+          ))}
         </motion.div>
       </motion.div>
     </div>

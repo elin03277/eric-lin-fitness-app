@@ -18,6 +18,7 @@ const container = {
 
 type Props = {
   setSelectedPage: (value: SelectedPage) => void;
+  // accessToken: string;
 };
 
 const buttonStyle = `mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`;
@@ -41,10 +42,10 @@ query {
 `;
 
 const AddWorkout = ({ setSelectedPage }: Props) => {
-  const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
-  const [offset, setOffset] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(3);
+  // , accessToken }: Props) => {
+  const [textButton, setTextButton] = useState<string>("CANCEL");
   const [filter, setFilter] = useState<string>("");
+  const [exerciseList, setExerciseList] = useState<string[]>([]);
 
   const [result, filterSearch] = useQuery({
     query: GetFilteredExerciseQuery,
@@ -63,21 +64,45 @@ const AddWorkout = ({ setSelectedPage }: Props) => {
   const inputStyles = `mb-5 w-full rounded-lg bg-primary-300 px-5 py-3 placeholder-white`;
 
   const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
+    register: registerFilter,
+    handleSubmit: handleFilterSubmit,
+    reset: resetFilter,
+    formState: { errors: errorsFilter },
   } = useForm();
 
-  const onSubmit = async (data: any = {}) => {
+  const {
+    register: registerWorkout,
+    handleSubmit: handleWorkoutSubmit,
+    reset: resetWorkout,
+    formState: { errors: errorsWorkout },
+  } = useForm();
+
+  const onFilterSubmit = async (data: any = {}) => {
     setFilter(data.filter);
+  };
+
+  const onWorkoutSubmit = async (data: any = {}) => {
+    console.log(data);
+    // try {
+    //     await createExercise(
+    //       { createExerciseInput: data },
+    //       {
+    //         fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
+    //       }
+    //     );
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    //   useDataReceived(true);
+    //   setTextButton("BACK");
+    //   reset();
   };
 
   if (result.fetching || countResult.fetching)
     return (
       <div className="bg-gray-20">
         <motion.div
-          className="mx-auto w-5/6  gap-16 py-20 md:h-full"
+          className="mx-auto w-5/6 gap-16 py-20 md:h-full"
           onViewportEnter={() => setSelectedPage(SelectedPage.Workouts)}
         >
           {/* HEADER */}
@@ -145,30 +170,135 @@ const AddWorkout = ({ setSelectedPage }: Props) => {
         </motion.div>
 
         {/* WORKOUT FORM */}
+        <div className="mt-10 justify-between gap-8 md:flex">
+          <motion.div
+            className="mt-10 basis-3/5 md:mt-0"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.5 }}
+            variants={{
+              hidden: { opacity: 0, y: 50 },
+              visible: { opacity: 1, y: 0 },
+            }}
+          >
+            <form onSubmit={handleWorkoutSubmit(onWorkoutSubmit)}>
+              <input
+                className={inputStyles}
+                type="text"
+                placeholder="WORKOUT NAME"
+                {...registerWorkout("name", {
+                  required: true,
+                  maxLength: 30,
+                })}
+              />
+              {errorsWorkout.name && (
+                <p className="text-primary-500">
+                  {errorsWorkout.name.type === "required" &&
+                    "This field is required."}
+                  {errorsWorkout.name.type === "maxLength" &&
+                    "Max length is 30 char."}
+                </p>
+              )}
+              <input
+                className={inputStyles}
+                type="text"
+                placeholder="TYPE"
+                {...registerWorkout("type", {
+                  required: true,
+                  maxLength: 30,
+                })}
+              />
+              {errorsWorkout.type && (
+                <p className="text-primary-500">
+                  {errorsWorkout.type.type === "required" &&
+                    "This field is required."}
+                  {errorsWorkout.type.type === "maxLength" &&
+                    "Max length is 30 char."}
+                </p>
+              )}
+              <textarea
+                className={inputStyles}
+                rows={2}
+                cols={50}
+                placeholder="DESCRIPTION"
+                {...registerWorkout("description", {
+                  required: true,
+                  maxLength: 2000,
+                })}
+              />
+              {errorsWorkout.description && (
+                <p className="text-primary-500">
+                  {errorsWorkout.description.type === "required" &&
+                    "This field is required."}
+                  {errorsWorkout.description.type === "maxLength" &&
+                    "Max length is 2000 char."}
+                </p>
+              )}
+              <button
+                type="submit"
+                className="mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white"
+              >
+                SUBMIT
+              </button>
+              <Link to="/workouts">
+                <button
+                  type="button"
+                  className="mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
+                >
+                  {textButton}
+                </button>
+              </Link>
+            </form>
+          </motion.div>
+          <motion.div
+            className="relative mt-16 basis-2/5 md:mt-0"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            variants={{
+              hidden: { opacity: 0, y: 50 },
+              visible: { opacity: 1, y: 0 },
+            }}
+          >
+            <div className="rounded-md border-2 border-gray-100 px-5 py-16 text-center">
+              <p>Exercise List:</p>
+              {exerciseList.map((name) => (
+                <p>{name}</p>
+              ))}
+            </div>
+          </motion.div>
+        </div>
 
         {/* SEARCH BAR */}
-        <div className=" mx-2 mt-2 justify-between gap-8">
-          <form className="basis-3/5 md:mt-0" onSubmit={handleSubmit(onSubmit)}>
+        <div className=" mt-2 justify-between gap-8">
+          <form
+            className="basis-3/5 md:mt-0"
+            onSubmit={handleFilterSubmit(onFilterSubmit)}
+          >
             <div className="mt-5 flex items-center justify-between gap-1">
               <input
                 className={inputStyles}
                 type="text"
                 placeholder="Search Exercises..."
-                {...register("filter", {
-                  required: true,
+                {...registerFilter("filter", {
                   maxLength: 30,
                 })}
               />
-              {errors.name && (
+              {/* {errorsFilter.filter && (
                 <p className="text-primary-500">
-                  {errors.name.type === "maxLength" && "Max length is 30 char."}
+                  {errorsFilter.filter.type === "maxLength" &&
+                    "Max length is 30 char."}
                 </p>
-              )}
+              )} */}
               <button
-                className=" mb-5 rounded-lg bg-primary-300 px-10 py-3 transition duration-500 hover:text-white"
+                className="mb-5 whitespace-nowrap rounded-lg bg-primary-300 px-10 py-3 transition duration-500 hover:text-white"
                 type="submit"
               >
-                Search
+                {errorsFilter.filter && errorsFilter.filter.type === "maxLength"
+                  ? "Max length 30 char"
+                  : "Search"}
               </button>
             </div>
           </form>

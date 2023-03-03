@@ -84,7 +84,7 @@ const AddExercise = ({ setSelectedPage, accessToken }: Props) => {
           </p>
         </motion.div>
 
-        {/* FORM AND IMAGE */}
+        {/* FORM AND CONFIRMATION */}
         <div className="mt-10 justify-between gap-8 md:flex">
           <motion.div
             className="mt-10 basis-3/5 md:mt-0"
@@ -171,7 +171,7 @@ const AddExercise = ({ setSelectedPage, accessToken }: Props) => {
               >
                 SUBMIT
               </button>
-              <Link to="/..">
+              <Link to="/exercises">
                 <button
                   type="button"
                   className="mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
