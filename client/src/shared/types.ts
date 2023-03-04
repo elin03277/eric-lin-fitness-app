@@ -21,6 +21,11 @@ export interface ClassType {
   image: string;
 }
 
+export interface AddExerciseType {
+  exerciseId: string;
+  exerciseName: string;
+}
+
 export interface ExerciseType {
   id: string;
   name: string;

@@ -1,6 +1,6 @@
 import useMediaQuery from "@/hooks/useMediaQuery";
 import ActionButton from "@/shared/ActionButton";
-import { ExerciseType, SelectedPage } from "@/shared/types";
+import { AddExerciseType, ExerciseType, SelectedPage } from "@/shared/types";
 import { motion } from "framer-motion";
 import { useQuery } from "urql";
 import HText from "@/shared/HText";
@@ -8,6 +8,8 @@ import Exercise from "@/shared/Exercise";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import ExerciseWorkoutAdd from "./ExerciseWorkoutAdd";
+import ExerciseListItem from "./ExerciseListItem";
 
 const container = {
   hidden: {},
@@ -45,7 +47,7 @@ const AddWorkout = ({ setSelectedPage }: Props) => {
   // , accessToken }: Props) => {
   const [textButton, setTextButton] = useState<string>("CANCEL");
   const [filter, setFilter] = useState<string>("");
-  const [exerciseList, setExerciseList] = useState<string[]>([]);
+  const [exerciseList, setExerciseList] = useState<AddExerciseType[]>([]);
 
   const [result, filterSearch] = useQuery({
     query: GetFilteredExerciseQuery,
@@ -74,6 +76,7 @@ const AddWorkout = ({ setSelectedPage }: Props) => {
     register: registerWorkout,
     handleSubmit: handleWorkoutSubmit,
     reset: resetWorkout,
+    setValue: setWorkoutValue,
     formState: { errors: errorsWorkout },
   } = useForm();
 
@@ -82,20 +85,10 @@ const AddWorkout = ({ setSelectedPage }: Props) => {
   };
 
   const onWorkoutSubmit = async (data: any = {}) => {
-    console.log(data);
-    // try {
-    //     await createExercise(
-    //       { createExerciseInput: data },
-    //       {
-    //         fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
-    //       }
-    //     );
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    //   useDataReceived(true);
-    //   setTextButton("BACK");
-    //   reset();
+    const ids = exerciseList.map(
+      (exercise: AddExerciseType) => exercise.exerciseId
+    );
+    setWorkoutValue("exerciseIds", ids);
   };
 
   if (result.fetching || countResult.fetching)
@@ -126,7 +119,7 @@ const AddWorkout = ({ setSelectedPage }: Props) => {
 
           {/* EXERCISES */}
           <motion.div
-            className="mt-5 items-center justify-between gap-8 md:flex"
+            className="mt-5 items-center justify-between gap-8"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.5 }}
@@ -264,8 +257,15 @@ const AddWorkout = ({ setSelectedPage }: Props) => {
           >
             <div className="rounded-md border-2 border-gray-100 px-5 py-16 text-center">
               <p>Exercise List:</p>
-              {exerciseList.map((name) => (
-                <p>{name}</p>
+              {exerciseList.map((item: AddExerciseType, index: number) => (
+                <ExerciseListItem
+                  key={item.exerciseId}
+                  id={item.exerciseId}
+                  name={item.exerciseName}
+                  order={index}
+                  exerciseList={exerciseList}
+                  setExerciseList={setExerciseList}
+                />
               ))}
             </div>
           </motion.div>
@@ -314,14 +314,16 @@ const AddWorkout = ({ setSelectedPage }: Props) => {
           variants={container}
         >
           {exercises.map(
-            ({ id, name, equipment, pattern, instructions }: any) => (
-              <Exercise
+            ({ id, name, equipment, pattern, instructions }: ExerciseType) => (
+              <ExerciseWorkoutAdd
                 key={id}
+                id={id}
                 name={name}
                 equipment={equipment}
                 pattern={pattern}
                 instructions={instructions}
-                setSelectedPage={setSelectedPage}
+                exerciseList={exerciseList}
+                setExerciseList={setExerciseList}
               />
             )
           )}

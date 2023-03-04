@@ -10,6 +10,7 @@ input CreateExerciseInput {
 }
 
 input CreateWorkoutInput {
+  description: String!
   exerciseIds: [String!]!
   name: String!
   type: String!
@@ -64,7 +65,8 @@ type User {
 }
 
 type Workout {
-  exerciseIds: [ID!]!
+  description: String!
+  exerciseIds: [String!]!
   id: ID!
   name: String!
   type: String!

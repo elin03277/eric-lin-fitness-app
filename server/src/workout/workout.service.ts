@@ -23,12 +23,13 @@ export class WorkoutService {
   async createWorkout(
     createWorkoutInput: CreateWorkoutInput,
   ): Promise<Workout> {
-    const { name, type, exerciseIds } = createWorkoutInput;
+    const { name, type, description, exerciseIds } = createWorkoutInput;
 
     const workout = this.workoutRepository.create({
       id: uuid(),
       name,
       type,
+      description,
       exerciseIds,
     });
 

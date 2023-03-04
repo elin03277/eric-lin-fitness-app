@@ -1,4 +1,5 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { GraphQLString } from 'graphql';
 import { Exercise } from 'src/exercise/exercise.entity';
 import {
   Column,
@@ -27,8 +28,12 @@ export class Workout {
   type: string;
 
   @Column()
+  @Field()
+  description: string;
+
+  @Column()
   // @ManyToMany(() => Exercise, (exercise) => exercise.workouts)
-  @Field((type) => [ID]) //, { nullable: true })
+  @Field((type) => [GraphQLString]) //, { nullable: true })
   exerciseIds: string[];
 
   //   @Column()
