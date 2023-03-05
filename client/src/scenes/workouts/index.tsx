@@ -44,6 +44,10 @@ const Workouts = ({ setSelectedPage }: Props) => {
   const workouts = useMemo(() => result.data?.getWorkouts || [], [result.data]);
   const inputStyles = `mb-5 w-full rounded-lg bg-primary-300 px-5 py-3 placeholder-white`;
 
+  const handleWorkout = (workoutId: string) => {
+    console.log(`Workout clicked: ${workoutId}`);
+  };
+
   if (result.fetching)
     return (
       <div className="bg-gray-20">
@@ -138,12 +142,14 @@ const Workouts = ({ setSelectedPage }: Props) => {
         {/* WORKOUTS */}
         <div className="mt-10 h-[353px] w-full overflow-x-auto overflow-y-hidden">
           <ul className="w-[2800px] whitespace-nowrap">
-            {workouts.map((workout: WorkoutType) => (
+            {workouts.map((workout: WorkoutType, index: number) => (
               <Workout
                 key={workout.id}
+                id={workout.id}
                 name={workout.name}
                 description={workout.description}
                 type={workout.type}
+                // onPress={() => handleWorkout(workout.id)}
               />
             ))}
           </ul>

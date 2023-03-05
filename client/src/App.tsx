@@ -13,6 +13,7 @@ import AddExercise from "@/scenes/addExercise";
 import Exercises from "@/scenes/exercises";
 import Workouts from "@/scenes/workouts";
 import AddWorkout from "@/scenes/addWorkout";
+import DisplayWorkout from "./scenes/displayWorkout";
 
 function App() {
   const [selectedPage, setSelectedPage] = useState<SelectedPage>(
@@ -79,6 +80,10 @@ function App() {
         <Route
           path="/addWorkout"
           element={<AddWorkout setSelectedPage={setSelectedPage} />}
+        />
+        <Route
+          path="/displayWorkout"
+          element={<DisplayWorkout setSelectedPage={setSelectedPage} />}
         />
         <Route
           path="/signup"

@@ -2,7 +2,7 @@ import useMediaQuery from "@/hooks/useMediaQuery";
 import ActionButton from "@/shared/ActionButton";
 import { AddExerciseType, ExerciseType, SelectedPage } from "@/shared/types";
 import { motion } from "framer-motion";
-import { useQuery } from "urql";
+import { useMutation, useQuery } from "urql";
 import HText from "@/shared/HText";
 import Exercise from "@/shared/Exercise";
 import { useEffect, useMemo, useState } from "react";
@@ -37,10 +37,16 @@ query ($filter: String!){
 }
 `;
 
-const GetExerciseCount = `
-query {
-  countExercises
-}
+const CreateWorkout = `
+mutation($createWorkoutInput: CreateWorkoutInput!) {
+    createWorkout(createWorkoutInput: $createWorkoutInput) {
+      id
+      name
+      type
+      description
+      exerciseIds
+    }
+  }
 `;
 
 const AddWorkout = ({ setSelectedPage }: Props) => {
@@ -48,15 +54,20 @@ const AddWorkout = ({ setSelectedPage }: Props) => {
   const [textButton, setTextButton] = useState<string>("CANCEL");
   const [filter, setFilter] = useState<string>("");
   const [exerciseList, setExerciseList] = useState<AddExerciseType[]>([]);
+  const [workoutId, setWorkoutId] = useState<string>("");
 
   const [result, filterSearch] = useQuery({
     query: GetFilteredExerciseQuery,
     variables: { filter },
   });
 
-  const [countResult] = useQuery({
-    query: GetExerciseCount,
-  });
+  const [{ data, fetching, error }, createWorkout] = useMutation(CreateWorkout);
+
+  useEffect(() => {
+    if (data) {
+      setWorkoutId(data.createWorkout.id);
+    }
+  }, [data]);
 
   const exercises = useMemo(
     () => result.data?.getFilteredExercises || [],
@@ -77,6 +88,7 @@ const AddWorkout = ({ setSelectedPage }: Props) => {
     handleSubmit: handleWorkoutSubmit,
     reset: resetWorkout,
     setValue: setWorkoutValue,
+    watch: watchWorkout,
     formState: { errors: errorsWorkout },
   } = useForm();
 
@@ -85,13 +97,20 @@ const AddWorkout = ({ setSelectedPage }: Props) => {
   };
 
   const onWorkoutSubmit = async (data: any = {}) => {
+    createWorkout({ createWorkoutInput: data });
+    setExerciseList([]);
+    setTextButton("Back");
+    resetWorkout();
+  };
+
+  const addExerciseList = () => {
     const ids = exerciseList.map(
       (exercise: AddExerciseType) => exercise.exerciseId
     );
     setWorkoutValue("exerciseIds", ids);
   };
 
-  if (result.fetching || countResult.fetching)
+  if (result.fetching)
     return (
       <div className="bg-gray-20">
         <motion.div
@@ -231,6 +250,7 @@ const AddWorkout = ({ setSelectedPage }: Props) => {
               <button
                 type="submit"
                 className="mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white"
+                onClick={addExerciseList}
               >
                 SUBMIT
               </button>
@@ -259,7 +279,7 @@ const AddWorkout = ({ setSelectedPage }: Props) => {
               <p>Exercise List:</p>
               {exerciseList.map((item: AddExerciseType, index: number) => (
                 <ExerciseListItem
-                  key={item.exerciseId}
+                  key={`${item.exerciseId}-${index}`}
                   id={item.exerciseId}
                   name={item.exerciseName}
                   order={index}
