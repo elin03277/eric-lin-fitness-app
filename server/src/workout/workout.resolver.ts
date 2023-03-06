@@ -1,7 +1,9 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Exercise } from '../exercise/exercise.entity';
 import { Workout } from './workout.entity';
 import { CreateWorkoutInput } from './workout.input';
 import { WorkoutService } from './workout.service';
+import { GraphQLString } from 'graphql';
 
 @Resolver((of) => Workout)
 export class WorkoutResolver {
@@ -16,6 +18,13 @@ export class WorkoutResolver {
   getWorkouts() {
     return this.workoutService.getWorkouts();
   }
+
+  // @Query((returns) => [Exercise])
+  // getWorkoutExercises(
+  //   @Args('exerciseIds', { type: () => [GraphQLString] }) exerciseIds: string[],
+  // ) {
+  //   return this.workoutService.getWorkoutExercises(exerciseIds);
+  // }
 
   @Mutation((returns) => Workout)
   createWorkout(

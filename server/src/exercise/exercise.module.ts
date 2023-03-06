@@ -7,7 +7,8 @@ import { ExerciseService } from './exercise.service';
 
 // Groups related functionality (usually includes controllers, services, and providers(in this case GraphQL resolvers))
 @Module({
-  imports: [TypeOrmModule.forFeature([Exercise]), WorkoutModule],
+  imports: [TypeOrmModule.forFeature([Exercise])],
   providers: [ExerciseResolver, ExerciseService],
+  exports: [ExerciseService],
 })
 export class ExerciseModule {}

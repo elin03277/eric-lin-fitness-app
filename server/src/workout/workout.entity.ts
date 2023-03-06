@@ -31,10 +31,15 @@ export class Workout {
   @Field()
   description: string;
 
+  // @Column()
+  // // @ManyToMany(() => Exercise, (exercise) => exercise.workouts)
+  // @Field((type) => [GraphQLString]) //, { nullable: true })
+  // exerciseIds: string[];
+
   @Column()
   // @ManyToMany(() => Exercise, (exercise) => exercise.workouts)
-  @Field((type) => [GraphQLString]) //, { nullable: true })
-  exerciseIds: string[];
+  @Field((type) => [Exercise]) //, { nullable: true })
+  exercises: Exercise[];
 
   //   @Column()
   //   @Field((type) => [Int])
