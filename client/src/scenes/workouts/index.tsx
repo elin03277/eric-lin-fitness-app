@@ -29,7 +29,7 @@ query {
     id
     name
     type
-    exerciseIds
+    description
   }
 }
 `;
@@ -144,7 +144,7 @@ const Workouts = ({ setSelectedPage }: Props) => {
           <ul className="w-[2800px] whitespace-nowrap">
             {workouts.map((workout: WorkoutType, index: number) => (
               <Workout
-                key={workout.id}
+                key={`${workout.id}-${index}`}
                 id={workout.id}
                 name={workout.name}
                 description={workout.description}

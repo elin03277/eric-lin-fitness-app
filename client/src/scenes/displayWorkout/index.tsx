@@ -21,53 +21,43 @@ type Props = {
 
 const buttonStyle = `mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`;
 
-const GetFilteredExerciseQuery = `
-query ($filter: String!){
-  getFilteredExercises(filter: $filter) {
-    id
+const GetWorkoutQuery = `
+query ($id: String!){
+  getWorkout(id: $id) {
     name
-    equipment
-    pattern
-    instructions
+    type
+    description
+    exercises {
+      id
+      name
+      equipment
+      pattern
+      instructions
+    }
   }
 }
 `;
 
 const DisplayWorkout = ({ setSelectedPage }: Props) => {
   // , accessToken }: Props) => {
-  const [filter, setFilter] = useState<string>("");
   const location = useLocation();
-  const id = location.state?.passedWorkoutId;
-  const [workoutId, setWorkoutId] = useState<string>(id);
+  const workoutId = location.state?.passedWorkoutId;
+  const [id, setId] = useState<string>(workoutId);
 
   const [result, filterSearch] = useQuery({
-    query: GetFilteredExerciseQuery,
-    variables: { filter },
+    query: GetWorkoutQuery,
+    variables: { id },
   });
 
-  const exercises = useMemo(
-    () => result.data?.getFilteredExercises || [],
-    [result.data]
-  );
+  const workout = useMemo(() => result.data?.getWorkout || [], [result.data]);
 
   const test = () => {
     workoutId === undefined
       ? console.log("Select a workout")
-      : console.log(workoutId);
+      : console.log(result.data.getWorkout);
   };
 
   const inputStyles = `mb-5 w-full rounded-lg bg-primary-300 px-5 py-3 placeholder-white`;
-
-  const {
-    register: registerFilter,
-    handleSubmit: handleFilterSubmit,
-    reset: resetFilter,
-    formState: { errors: errorsFilter },
-  } = useForm();
-
-  const onFilterSubmit = async (data: any = {}) => {
-    setFilter(data.filter);
-  };
 
   if (result.fetching)
     return (
@@ -134,39 +124,11 @@ const DisplayWorkout = ({ setSelectedPage }: Props) => {
             visible: { opacity: 1, x: 0 },
           }}
         >
-          <HText>MAKE YOUR OWN WORKOUT!</HText>
-          <p className="my-5">
-            Search for exercises and add them to your workout!
-          </p>
+          <HText>{workout.name}</HText>
+          <p className="my-5">{workout.type}</p>
+          <p className="my-5">{workout.description}</p>
         </motion.div>
-        {/* <button onClick={test}>Hi</button> */}
-
-        {/* SEARCH BAR */}
-        <div className=" mt-2 justify-between gap-8">
-          <form
-            className="basis-3/5 md:mt-0"
-            onSubmit={handleFilterSubmit(onFilterSubmit)}
-          >
-            <div className="mt-5 flex items-center justify-between gap-1">
-              <input
-                className={inputStyles}
-                type="text"
-                placeholder="Search Exercises..."
-                {...registerFilter("filter", {
-                  maxLength: 30,
-                })}
-              />
-              <button
-                className="mb-5 whitespace-nowrap rounded-lg bg-primary-300 px-10 py-3 transition duration-500 hover:text-white"
-                type="submit"
-              >
-                {errorsFilter.filter && errorsFilter.filter.type === "maxLength"
-                  ? "Max length 30 char"
-                  : "Search"}
-              </button>
-            </div>
-          </form>
-        </div>
+        <button onClick={test}>Hi</button>
 
         {/* EXERCISES */}
         <motion.div
@@ -177,7 +139,7 @@ const DisplayWorkout = ({ setSelectedPage }: Props) => {
           viewport={{ once: true }}
           variants={container}
         >
-          {exercises.map(
+          {workout.exercises.map(
             (
               { id, name, equipment, pattern, instructions }: ExerciseType,
               index: number
