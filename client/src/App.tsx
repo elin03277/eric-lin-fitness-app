@@ -50,11 +50,21 @@ function App() {
         />
         <Route
           path="/exercises"
-          element={<Exercises setSelectedPage={setSelectedPage} />}
+          element={
+            <Exercises
+              setSelectedPage={setSelectedPage}
+              accessToken={accessToken}
+            />
+          }
         />
         <Route
           path="/workouts"
-          element={<Workouts setSelectedPage={setSelectedPage} />}
+          element={
+            <Workouts
+              setSelectedPage={setSelectedPage}
+              accessToken={accessToken}
+            />
+          }
         />
         <Route
           path="/benefits"

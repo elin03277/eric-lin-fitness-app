@@ -7,7 +7,6 @@ import HText from "@/shared/HText";
 import Exercise from "@/shared/Exercise";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useForm } from "react-hook-form";
 import Workout from "./Workout";
 
 const container = {
@@ -19,6 +18,7 @@ const container = {
 
 type Props = {
   setSelectedPage: (value: SelectedPage) => void;
+  accessToken: string;
 };
 
 const buttonStyle = `mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`;
@@ -34,10 +34,10 @@ query {
 }
 `;
 
-const Workouts = ({ setSelectedPage }: Props) => {
+const Workouts = ({ setSelectedPage, accessToken }: Props) => {
   const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
 
-  const [result, getWorkouts] = useQuery({
+  const [result] = useQuery({
     query: GetWorkouts,
   });
 
@@ -77,7 +77,7 @@ const Workouts = ({ setSelectedPage }: Props) => {
               type="button"
               className="invisible mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
             >
-              Add Exercise
+              Add Workout
             </button>
           </motion.div>
 
@@ -129,14 +129,25 @@ const Workouts = ({ setSelectedPage }: Props) => {
             Here are some example workouts to get you started! Feel free to add
             your own!
           </p>
-          <Link to="/addWorkout">
-            <button
-              type="button"
-              className="mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
-            >
-              Add Workout
-            </button>
-          </Link>
+          {accessToken !== "" ? (
+            <Link to="/addWorkout">
+              <button
+                type="button"
+                className="mt-2 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
+              >
+                Add Workout
+              </button>
+            </Link>
+          ) : (
+            <Link to="/signUp">
+              <button
+                type="button"
+                className="mt-2 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
+              >
+                Add Workout
+              </button>
+            </Link>
+          )}
         </motion.div>
 
         {/* WORKOUTS */}

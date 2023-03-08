@@ -41,10 +41,6 @@ const CreateWorkout = `
 mutation($createWorkoutInput: CreateWorkoutInput!) {
     createWorkout(createWorkoutInput: $createWorkoutInput) {
       id
-      name
-      type
-      description
-      exerciseIds
     }
   }
 `;
@@ -275,7 +271,7 @@ const AddWorkout = ({ setSelectedPage }: Props) => {
               visible: { opacity: 1, y: 0 },
             }}
           >
-            <div className="rounded-md border-2 border-gray-100 px-5 py-16 text-center">
+            <div className="h-[300px] overflow-auto rounded-md border-2 border-gray-100 py-10 text-center">
               <p>Exercise List:</p>
               {exerciseList.map((item: AddExerciseType, index: number) => (
                 <ExerciseListItem

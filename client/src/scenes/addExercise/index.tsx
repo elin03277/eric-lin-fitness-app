@@ -199,16 +199,9 @@ const AddExercise = ({ setSelectedPage, accessToken }: Props) => {
                   equipment={data.createExercise.equipment}
                   pattern={data.createExercise.pattern}
                   instructions={data.createExercise.instructions}
-                  setSelectedPage={setSelectedPage}
                 />
               ) : (
-                <Exercise
-                  name="Name"
-                  equipment="Equipment"
-                  pattern="Pattern"
-                  instructions="Instructions"
-                  setSelectedPage={setSelectedPage}
-                />
+                <Exercise name="Name" equipment="" pattern="" instructions="" />
               )}
             </div>
           </motion.div>

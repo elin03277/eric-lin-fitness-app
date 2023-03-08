@@ -13,7 +13,7 @@ type Props = {
   equipment: string;
   pattern: string;
   instructions: string;
-  setSelectedPage: (value: SelectedPage) => void;
+  setSelectedPage?: (value: SelectedPage) => void;
 };
 
 const Exercise = ({
@@ -32,13 +32,17 @@ const Exercise = ({
       <p className="my-3">Equipment: {equipment}</p>
       <p className="my-3">Pattern: {pattern}</p>
       <p className="my-3">Instructions: {instructions}</p>
-      <Link
-        className="text-sm font-bold text-primary-500 underline hover:text-secondary-500"
-        onClick={() => setSelectedPage(SelectedPage.SignUp)}
-        to={`/${SelectedPage.SignUp}`}
-      >
-        <p>Learn More</p>
-      </Link>
+      {setSelectedPage ? (
+        <Link
+          className="text-sm font-bold text-primary-500 underline hover:text-secondary-500"
+          onClick={() => setSelectedPage(SelectedPage.SignUp)}
+          to={`/${SelectedPage.SignUp}`}
+        >
+          <p>Learn More</p>
+        </Link>
+      ) : (
+        <></>
+      )}
     </motion.div>
   );
 };

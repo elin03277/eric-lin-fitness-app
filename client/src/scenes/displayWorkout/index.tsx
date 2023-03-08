@@ -44,7 +44,7 @@ const DisplayWorkout = ({ setSelectedPage }: Props) => {
   const workoutId = location.state?.passedWorkoutId;
   const [id, setId] = useState<string>(workoutId);
 
-  const [result, filterSearch] = useQuery({
+  const [result, workoutDisplay] = useQuery({
     query: GetWorkoutQuery,
     variables: { id },
   });
@@ -68,10 +68,11 @@ const DisplayWorkout = ({ setSelectedPage }: Props) => {
         >
           {/* HEADER */}
           <motion.div
-            className="md:my-5 md:w-3/5"
+            //className="md:my-5 md:w-3/5"
+            className="mt-5 rounded-md border-2 border-gray-100 px-5 py-16 text-center"
             initial="hidden"
-            // whileInView="visible"
             animate="visible"
+            // whileInView="visible"
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.5 }}
             variants={{
@@ -79,10 +80,9 @@ const DisplayWorkout = ({ setSelectedPage }: Props) => {
               visible: { opacity: 1, x: 0 },
             }}
           >
-            <HText>MAKE YOUR OWN WORKOUT!</HText>
-            <p className="my-5">
-              Search for exercises and add them to your workout!
-            </p>
+            <HText>Loading...</HText>
+            <p className="my-5">Type: Loading...</p>
+            <p className="my-5">Description: Loading...</p>
           </motion.div>
 
           {/* EXERCISES */}
@@ -113,7 +113,8 @@ const DisplayWorkout = ({ setSelectedPage }: Props) => {
       >
         {/* HEADER */}
         <motion.div
-          className="md:my-5 md:w-3/5"
+          //className="md:my-5 md:w-3/5"
+          className="mt-5 rounded-md border-2 border-gray-100 px-5 py-16 text-center"
           initial="hidden"
           animate="visible"
           // whileInView="visible"
@@ -125,10 +126,9 @@ const DisplayWorkout = ({ setSelectedPage }: Props) => {
           }}
         >
           <HText>{workout.name}</HText>
-          <p className="my-5">{workout.type}</p>
-          <p className="my-5">{workout.description}</p>
+          <p className="my-5">{`Type: ${workout.type}`}</p>
+          <p className="my-5">{`Description: ${workout.description}`}</p>
         </motion.div>
-        <button onClick={test}>Hi</button>
 
         {/* EXERCISES */}
         <motion.div
@@ -150,7 +150,6 @@ const DisplayWorkout = ({ setSelectedPage }: Props) => {
                 equipment={equipment}
                 pattern={pattern}
                 instructions={instructions}
-                setSelectedPage={setSelectedPage}
               />
             )
           )}

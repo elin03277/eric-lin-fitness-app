@@ -18,6 +18,7 @@ const container = {
 
 type Props = {
   setSelectedPage: (value: SelectedPage) => void;
+  accessToken: string;
 };
 
 const buttonStyle = `mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`;
@@ -40,13 +41,13 @@ query {
 }
 `;
 
-const Exercises = ({ setSelectedPage }: Props) => {
+const Exercises = ({ setSelectedPage, accessToken }: Props) => {
   const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
   const [offset, setOffset] = useState<number>(0);
   const [limit, setLimit] = useState<number>(3);
   const [filter, setFilter] = useState<string>("");
 
-  const [result, filterSearch] = useQuery({
+  const [result] = useQuery({
     query: GetFilteredExerciseQuery,
     variables: { filter },
   });
@@ -108,7 +109,7 @@ const Exercises = ({ setSelectedPage }: Props) => {
 
           {/* EXERCISES */}
           <motion.div
-            className="mt-5 items-center justify-between gap-8 md:flex"
+            className="mt-5 items-center justify-between gap-8"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.5 }}
@@ -180,15 +181,25 @@ const Exercises = ({ setSelectedPage }: Props) => {
               </button>
             </div>
           </form>
-
-          <Link to="/addExercise">
-            <button
-              type="button"
-              className="mt-2 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
-            >
-              Add Exercise
-            </button>
-          </Link>
+          {accessToken !== "" ? (
+            <Link to="/addExercise">
+              <button
+                type="button"
+                className="mt-2 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
+              >
+                Add Exercise
+              </button>
+            </Link>
+          ) : (
+            <Link to="/signUp">
+              <button
+                type="button"
+                className="mt-2 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
+              >
+                Add Exercise
+              </button>
+            </Link>
+          )}
         </div>
 
         {/* EXERCISES */}

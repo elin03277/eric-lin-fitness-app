@@ -199,31 +199,13 @@ const Home = ({ setSelectedPage }: Props) => {
           viewport={{ once: true, amount: 0.5 }}
           variants={container}
         >
-          {/* <Exercise
-            name={exercises[0].name}
-            equipment={exercises[0].equipment}
-            pattern={exercises[0].pattern}
-            instructions={exercises[0].instructions}
-            setSelectedPage={setSelectedPage}
-          />
-          <Exercise
-            name={exercises[1].name}
-            equipment={exercises[1].equipment}
-            pattern={exercises[1].pattern}
-            instructions={exercises[1].instructions}
-            setSelectedPage={setSelectedPage}
-          />
-          <Exercise
-            name={exercises[2].name}
-            equipment={exercises[2].equipment}
-            pattern={exercises[2].pattern}
-            instructions={exercises[2].instructions}
-            setSelectedPage={setSelectedPage}
-          /> */}
           {exercises.map(
-            ({ id, name, equipment, pattern, instructions }: any) => (
+            (
+              { id, name, equipment, pattern, instructions }: ExerciseType,
+              index: number
+            ) => (
               <Exercise
-                key={id}
+                key={`${id}-${index}`}
                 name={name}
                 equipment={equipment}
                 pattern={pattern}
