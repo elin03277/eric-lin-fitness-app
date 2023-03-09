@@ -4,6 +4,8 @@ import { Workout } from './workout.entity';
 import { CreateWorkoutInput } from './workout.input';
 import { WorkoutService } from './workout.service';
 import { GraphQLString } from 'graphql';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 
 @Resolver((of) => Workout)
 export class WorkoutResolver {
@@ -27,6 +29,7 @@ export class WorkoutResolver {
   // }
 
   @Mutation((returns) => Workout)
+  @UseGuards(JwtAuthGuard)
   createWorkout(
     @Args('createWorkoutInput') createWorkoutInput: CreateWorkoutInput,
   ) {
