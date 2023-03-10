@@ -39,18 +39,16 @@ const AddExercise = ({ setSelectedPage, accessToken }: Props) => {
   } = useForm();
 
   const onSubmit = async (data: any = {}) => {
-    try {
-      await createExercise(
-        { createExerciseInput: data },
-        {
-          fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
-        }
-      );
-    } catch (error) {
-      console.log(error);
+    createExercise(
+      { createExerciseInput: data },
+      {
+        fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
+      }
+    );
+    if (!error) {
+      useDataReceived(true);
+      setTextButton("BACK");
     }
-    useDataReceived(true);
-    setTextButton("BACK");
     reset();
   };
 
@@ -165,12 +163,23 @@ const AddExercise = ({ setSelectedPage, accessToken }: Props) => {
                     "Max length is 2000 char."}
                 </p>
               )}
-              <button
-                type="submit"
-                className="mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white"
-              >
-                SUBMIT
-              </button>
+              {accessToken !== "" ? (
+                <button
+                  type="submit"
+                  className="mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white"
+                >
+                  SUBMIT
+                </button>
+              ) : (
+                <Link to="/signup">
+                  <button
+                    type="button"
+                    className="mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white"
+                  >
+                    SUBMIT
+                  </button>
+                </Link>
+              )}
               <Link to="/exercises">
                 <button
                   type="button"

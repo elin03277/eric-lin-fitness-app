@@ -45,6 +45,18 @@ export class AuthService {
     };
   }
 
+  async decode(token: string): Promise<User> {
+    const decoded = this.jwtService.verify(token);
+    console.log(decoded.expiresIn);
+    const user = await this.usersService.findByUsername(decoded.username);
+
+    if (!user) {
+      throw new Error('Invalid token');
+    }
+
+    return user;
+  }
+
   async refresh(refreshToken: string): Promise<any> {
     const decoded = this.jwtService.verify(refreshToken);
     const user = await this.usersService.findByUsername(decoded.id);

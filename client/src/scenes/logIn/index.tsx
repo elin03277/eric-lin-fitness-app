@@ -46,9 +46,7 @@ const LogIn = ({ setSelectedPage, setAccessToken }: Props) => {
   const onSubmit = async (data: any = {}) => {
     await logIn({ loginUserInput: data });
     setTextButton("BACK");
-    {
-      /*reset();*/
-    }
+    reset();
   };
 
   if (fetching) return null;

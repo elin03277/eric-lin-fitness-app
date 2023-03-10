@@ -20,7 +20,7 @@ const container = {
 
 type Props = {
   setSelectedPage: (value: SelectedPage) => void;
-  // accessToken: string;
+  accessToken: string;
 };
 
 const buttonStyle = `mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`;
@@ -45,8 +45,7 @@ mutation($createWorkoutInput: CreateWorkoutInput!) {
   }
 `;
 
-const AddWorkout = ({ setSelectedPage }: Props) => {
-  // , accessToken }: Props) => {
+const AddWorkout = ({ setSelectedPage, accessToken }: Props) => {
   const [textButton, setTextButton] = useState<string>("CANCEL");
   const [filter, setFilter] = useState<string>("");
   const [exerciseList, setExerciseList] = useState<AddExerciseType[]>([]);
@@ -243,13 +242,24 @@ const AddWorkout = ({ setSelectedPage }: Props) => {
                     "Max length is 2000 char."}
                 </p>
               )}
-              <button
-                type="submit"
-                className="mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white"
-                onClick={addExerciseList}
-              >
-                SUBMIT
-              </button>
+              {accessToken !== "" ? (
+                <button
+                  type="submit"
+                  className="mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white"
+                  onClick={addExerciseList}
+                >
+                  SUBMIT
+                </button>
+              ) : (
+                <Link to="/signup">
+                  <button
+                    type="button"
+                    className="mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white"
+                  >
+                    SUBMIT
+                  </button>
+                </Link>
+              )}
               <Link to="/workouts">
                 <button
                   type="button"

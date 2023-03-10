@@ -39,7 +39,9 @@ function App() {
       <Navbar
         isTopOfPage={isTopOfPage}
         selectedPage={selectedPage}
+        accessToken={accessToken}
         setSelectedPage={setSelectedPage}
+        setAccessToken={setAccessToken}
       />
       <Routes>
         <Route path="/" element={<Navigate to="/home" />} />
@@ -89,7 +91,12 @@ function App() {
         />
         <Route
           path="/addWorkout"
-          element={<AddWorkout setSelectedPage={setSelectedPage} />}
+          element={
+            <AddWorkout
+              setSelectedPage={setSelectedPage}
+              accessToken={accessToken}
+            />
+          }
         />
         <Route
           path="/displayWorkout"

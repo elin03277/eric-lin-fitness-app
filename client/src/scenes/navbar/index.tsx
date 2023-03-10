@@ -10,10 +10,18 @@ import HomePageText from "@/assets/HomePageText.png";
 type Props = {
   isTopOfPage: boolean;
   selectedPage: SelectedPage;
+  accessToken: string;
   setSelectedPage: (value: SelectedPage) => void;
+  setAccessToken: (value: string) => void;
 };
 
-const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }: Props) => {
+const Navbar = ({
+  isTopOfPage,
+  selectedPage,
+  accessToken,
+  setSelectedPage,
+  setAccessToken,
+}: Props) => {
   const flexBetween = "flex items-center justify-between";
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
   const isAboveMediumScreens = useMediaQuery("(min-width: 1060px)");
@@ -70,11 +78,20 @@ const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }: Props) => {
                   />
                 </div>
                 <div className={`${flexBetween} gap-8`}>
-                  <SelectLink
-                    page="Log In"
-                    selectedPage={selectedPage}
-                    setSelectedPage={setSelectedPage}
-                  />
+                  {accessToken !== "" ? (
+                    <div
+                      className="cursor-pointer transition duration-500 hover:text-primary-300"
+                      onClick={() => setAccessToken("")}
+                    >
+                      Log Out
+                    </div>
+                  ) : (
+                    <SelectLink
+                      page="Log In"
+                      selectedPage={selectedPage}
+                      setSelectedPage={setSelectedPage}
+                    />
+                  )}
                   <ActionButton setSelectedPage={setSelectedPage}>
                     Become a Member
                   </ActionButton>
@@ -139,11 +156,20 @@ const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }: Props) => {
               selectedPage={selectedPage}
               setSelectedPage={setSelectedPage}
             />
-            <SelectLink
-              page="Log In"
-              selectedPage={selectedPage}
-              setSelectedPage={setSelectedPage}
-            />
+            {accessToken !== "" ? (
+              <div
+                className="cursor-pointer transition duration-500 hover:text-primary-300"
+                onClick={() => setAccessToken("")}
+              >
+                Log Out
+              </div>
+            ) : (
+              <SelectLink
+                page="Log In"
+                selectedPage={selectedPage}
+                setSelectedPage={setSelectedPage}
+              />
+            )}
           </div>
         </div>
       )}
