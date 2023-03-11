@@ -1,5 +1,6 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { GraphQLString } from 'graphql/type';
 import { User } from '../users/entities/user.entity';
 import { AuthService } from './auth.service';
 import { LoginResponse } from './dto/login-response';
@@ -26,10 +27,11 @@ export class AuthResolver {
   }
 
   @Query(() => User)
-  // @UseGuards(JwtAuthGuard)
-  decode(@Args('token') token: string) {
-    //, @Context() context) {
-    // console.log(context.body);
+  @UseGuards(JwtAuthGuard)
+  decode(@Context('req') req) {
+    console.log(req.user.userId);
+    const authHeader = req.headers.authorization;
+    const token = authHeader.split(' ')[1];
     return this.authService.decode(token);
   }
 }

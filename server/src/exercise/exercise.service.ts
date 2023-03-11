@@ -4,12 +4,14 @@ import { Like, Repository } from 'typeorm';
 import { Exercise } from './exercise.entity';
 import { v4 as uuid } from 'uuid';
 import { CreateExerciseInput } from './dto/exercise.input';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class ExerciseService {
   constructor(
     @InjectRepository(Exercise)
     private exerciseRepository: Repository<Exercise>,
+    private usersService: UsersService,
   ) {}
 
   async getExercise(id: string): Promise<Exercise> {
@@ -58,24 +60,19 @@ export class ExerciseService {
 
   async createExercise(
     createExerciseInput: CreateExerciseInput,
+    userId: string,
   ): Promise<Exercise> {
-    const {
-      name,
-      equipment,
-      pattern,
-      instructions,
-    } = // primaryMuscles, secondaryMuscles, instructions } =
-      createExerciseInput;
+    const { name, equipment, pattern, instructions } = createExerciseInput;
 
     const exercise = this.exerciseRepository.create({
       id: uuid(),
       name,
       equipment,
       pattern,
-      // primaryMuscles,
-      // secondaryMuscles,
       instructions,
     });
+
+    this.usersService.assignExerciseToUser(userId, exercise.id);
 
     return this.exerciseRepository.save(exercise);
   }

@@ -139,7 +139,7 @@ const Workouts = ({ setSelectedPage, accessToken }: Props) => {
               </button>
             </Link>
           ) : (
-            <Link to="/signUp">
+            <Link to="/logIn">
               <button
                 type="button"
                 className="mt-2 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"

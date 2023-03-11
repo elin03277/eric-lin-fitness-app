@@ -17,6 +17,7 @@ export class UsersService {
       id: uuid(),
       ...createUserInput,
       exerciseIds: [],
+      workoutIds: [],
     });
 
     return this.userRepository.save(user);

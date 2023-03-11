@@ -1,5 +1,6 @@
 import {
   Args,
+  Context,
   ID,
   Int,
   Mutation,
@@ -62,7 +63,11 @@ export class ExerciseResolver {
   @UseGuards(JwtAuthGuard)
   createExercise(
     @Args('createExerciseInput') createExerciseInput: CreateExerciseInput,
+    @Context('req') req,
   ) {
-    return this.exerciseService.createExercise(createExerciseInput);
+    return this.exerciseService.createExercise(
+      createExerciseInput,
+      req.user.userId,
+    );
   }
 }

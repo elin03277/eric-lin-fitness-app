@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Exercise } from '../exercise/exercise.entity';
 import { Workout } from './workout.entity';
 import { CreateWorkoutInput } from './workout.input';
@@ -32,7 +32,11 @@ export class WorkoutResolver {
   @UseGuards(JwtAuthGuard)
   createWorkout(
     @Args('createWorkoutInput') createWorkoutInput: CreateWorkoutInput,
+    @Context('req') req,
   ) {
-    return this.workoutService.createWorkout(createWorkoutInput);
+    return this.workoutService.createWorkout(
+      createWorkoutInput,
+      req.user.userId,
+    );
   }
 }

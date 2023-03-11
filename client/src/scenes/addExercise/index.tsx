@@ -5,10 +5,11 @@ import { Link } from "react-router-dom";
 import HText from "@/shared/HText";
 import { useMutation } from "urql";
 import Exercise from "@/shared/Exercise";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   setSelectedPage: (value: SelectedPage) => void;
+  setAccessToken: (value: string) => void;
   accessToken: string;
 };
 
@@ -23,13 +24,23 @@ const CreateExercise = `
     }
 `;
 
-const AddExercise = ({ setSelectedPage, accessToken }: Props) => {
+const AddExercise = ({
+  setSelectedPage,
+  setAccessToken,
+  accessToken,
+}: Props) => {
   const inputStyles = `mb-5 w-full rounded-lg bg-primary-300 px-5 py-3 placeholder-white`;
 
   const [dataReceived, useDataReceived] = useState<boolean>(false);
   const [textButton, setTextButton] = useState<string>("CANCEL");
   const [{ data, fetching, error }, createExercise] =
     useMutation(CreateExercise);
+
+  useEffect(() => {
+    if (error) {
+      setAccessToken("");
+    }
+  }, [error]);
 
   const {
     register,
@@ -39,16 +50,15 @@ const AddExercise = ({ setSelectedPage, accessToken }: Props) => {
   } = useForm();
 
   const onSubmit = async (data: any = {}) => {
-    createExercise(
+    await createExercise(
       { createExerciseInput: data },
       {
         fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
       }
     );
-    if (!error) {
-      useDataReceived(true);
-      setTextButton("BACK");
-    }
+
+    useDataReceived(true);
+    setTextButton("BACK");
     reset();
   };
 
@@ -72,14 +82,17 @@ const AddExercise = ({ setSelectedPage, accessToken }: Props) => {
             visible: { opacity: 1, x: 0 },
           }}
         >
-          <HText>
-            <span className="text-primary-500">ADD AN EXERCISE</span> AND GET IN
-            SHAPE
-          </HText>
-          <p className="my-5">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
-            pharetra venenatis pellentesque.
-          </p>
+          {!error ? (
+            <HText>
+              <span className="text-primary-500">ADD AN EXERCISE</span> AND GET
+              IN SHAPE
+            </HText>
+          ) : (
+            <HText>
+              <span className="text-primary-500">LOG IN</span> TO ADD AN
+              EXERCISE
+            </HText>
+          )}
         </motion.div>
 
         {/* FORM AND CONFIRMATION */}
@@ -171,7 +184,7 @@ const AddExercise = ({ setSelectedPage, accessToken }: Props) => {
                   SUBMIT
                 </button>
               ) : (
-                <Link to="/signup">
+                <Link to="/logIn">
                   <button
                     type="button"
                     className="mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white"
@@ -202,7 +215,7 @@ const AddExercise = ({ setSelectedPage, accessToken }: Props) => {
             }}
           >
             <div className="w-full before:absolute before:-bottom-20 before:-right-10 before:z-[-1] md:before:content-evolvetext">
-              {dataReceived ? (
+              {dataReceived && !error ? (
                 <Exercise
                   name={data.createExercise.name}
                   equipment={data.createExercise.equipment}

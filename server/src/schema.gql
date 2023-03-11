@@ -47,7 +47,7 @@ type Mutation {
 
 type Query {
   countExercises: Int!
-  decode(token: String!): User!
+  decode: User!
   exercise(id: String!): Exercise!
   getExercises(limit: Int!, offset: Int!): [Exercise!]!
   getFilteredExercises(filter: String!): [Exercise!]!

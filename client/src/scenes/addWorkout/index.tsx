@@ -20,6 +20,7 @@ const container = {
 
 type Props = {
   setSelectedPage: (value: SelectedPage) => void;
+  setAccessToken: (value: string) => void;
   accessToken: string;
 };
 
@@ -45,7 +46,11 @@ mutation($createWorkoutInput: CreateWorkoutInput!) {
   }
 `;
 
-const AddWorkout = ({ setSelectedPage, accessToken }: Props) => {
+const AddWorkout = ({
+  setSelectedPage,
+  setAccessToken,
+  accessToken,
+}: Props) => {
   const [textButton, setTextButton] = useState<string>("CANCEL");
   const [filter, setFilter] = useState<string>("");
   const [exerciseList, setExerciseList] = useState<AddExerciseType[]>([]);
@@ -63,6 +68,12 @@ const AddWorkout = ({ setSelectedPage, accessToken }: Props) => {
       setWorkoutId(data.createWorkout.id);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (error) {
+      setAccessToken("");
+    }
+  }, [error]);
 
   const exercises = useMemo(
     () => result.data?.getFilteredExercises || [],
@@ -88,11 +99,16 @@ const AddWorkout = ({ setSelectedPage, accessToken }: Props) => {
   } = useForm();
 
   const onFilterSubmit = async (data: any = {}) => {
-    setFilter(data.filter);
+    await setFilter(data.filter);
   };
 
   const onWorkoutSubmit = async (data: any = {}) => {
-    createWorkout({ createWorkoutInput: data });
+    await createWorkout(
+      { createWorkoutInput: data },
+      {
+        fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
+      }
+    );
     setExerciseList([]);
     setTextButton("Back");
     resetWorkout();
@@ -102,6 +118,7 @@ const AddWorkout = ({ setSelectedPage, accessToken }: Props) => {
     const ids = exerciseList.map(
       (exercise: AddExerciseType) => exercise.exerciseId
     );
+
     setWorkoutValue("exerciseIds", ids);
   };
 
@@ -170,10 +187,19 @@ const AddWorkout = ({ setSelectedPage, accessToken }: Props) => {
             visible: { opacity: 1, x: 0 },
           }}
         >
-          <HText>MAKE YOUR OWN WORKOUT!</HText>
-          <p className="my-5">
-            Search for exercises and add them to your workout!
-          </p>
+          {!error ? (
+            <>
+              <HText>MAKE YOUR OWN WORKOUT!</HText>
+              <p className="my-5">
+                Search for exercises and add them to your workout!
+              </p>
+            </>
+          ) : (
+            <>
+              <HText>LOG IN TO ADD YOUR WORKOUT!</HText>
+              <p className="my-5">Please log in and come back!</p>
+            </>
+          )}
         </motion.div>
 
         {/* WORKOUT FORM */}
@@ -243,15 +269,24 @@ const AddWorkout = ({ setSelectedPage, accessToken }: Props) => {
                 </p>
               )}
               {accessToken !== "" ? (
-                <button
-                  type="submit"
-                  className="mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white"
-                  onClick={addExerciseList}
-                >
-                  SUBMIT
-                </button>
+                exerciseList.length !== 0 ? (
+                  <button
+                    type="submit"
+                    className="mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white"
+                    onClick={addExerciseList}
+                  >
+                    SUBMIT
+                  </button>
+                ) : (
+                  <button
+                    disabled
+                    className="mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white"
+                  >
+                    SUBMIT
+                  </button>
+                )
               ) : (
-                <Link to="/signup">
+                <Link to="/logIn">
                   <button
                     type="button"
                     className="mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white"

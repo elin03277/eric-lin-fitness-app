@@ -85,6 +85,7 @@ function App() {
           element={
             <AddExercise
               setSelectedPage={setSelectedPage}
+              setAccessToken={setAccessToken}
               accessToken={accessToken}
             />
           }
@@ -94,6 +95,7 @@ function App() {
           element={
             <AddWorkout
               setSelectedPage={setSelectedPage}
+              setAccessToken={setAccessToken}
               accessToken={accessToken}
             />
           }

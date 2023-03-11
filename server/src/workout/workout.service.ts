@@ -6,6 +6,7 @@ import { CreateWorkoutInput } from './workout.input';
 import { v4 as uuid } from 'uuid';
 import { ExerciseService } from 'src/exercise/exercise.service';
 import { Exercise } from 'src/exercise/exercise.entity';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class WorkoutService {
@@ -13,6 +14,7 @@ export class WorkoutService {
     @InjectRepository(Workout)
     private workoutRepository: Repository<Workout>,
     private exerciseService: ExerciseService,
+    private usersService: UsersService,
   ) {}
 
   async getWorkout(id: string): Promise<Workout> {
@@ -29,6 +31,7 @@ export class WorkoutService {
 
   async createWorkout(
     createWorkoutInput: CreateWorkoutInput,
+    userId: string,
   ): Promise<Workout> {
     const { name, type, description, exerciseIds } = createWorkoutInput;
     // const workoutExercises = await this.exerciseService.getWorkoutExercises(
@@ -44,9 +47,10 @@ export class WorkoutService {
       name,
       type,
       description,
-      // exerciseIds,
       exercises: workoutExercises,
     });
+
+    this.usersService.assignWorkoutToUser(userId, workout.id);
 
     return this.workoutRepository.save(workout);
   }

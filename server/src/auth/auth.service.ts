@@ -32,7 +32,7 @@ export class AuthService {
           username: user.username,
           sub: user.id,
         },
-        { expiresIn: '2m' },
+        { expiresIn: '1m' },
       ),
       refresh_token: this.jwtService.sign(
         {
@@ -47,7 +47,7 @@ export class AuthService {
 
   async decode(token: string): Promise<User> {
     const decoded = this.jwtService.verify(token);
-    console.log(decoded.expiresIn);
+    // console.log(decoded.sub);
     const user = await this.usersService.findByUsername(decoded.username);
 
     if (!user) {
