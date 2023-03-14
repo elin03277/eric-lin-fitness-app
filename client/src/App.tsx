@@ -48,7 +48,9 @@ function App() {
         <Route path="*" element={<Navigate to="/home" />} />
         <Route
           path="/home"
-          element={<Home setSelectedPage={setSelectedPage} />}
+          element={
+            <Home setSelectedPage={setSelectedPage} accessToken={accessToken} />
+          }
         />
         <Route
           path="/exercises"

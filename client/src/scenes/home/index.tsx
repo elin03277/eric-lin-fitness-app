@@ -17,6 +17,7 @@ const container = {
 
 type Props = {
   setSelectedPage: (value: SelectedPage) => void;
+  accessToken: string;
 };
 
 const buttonStyle = `mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`;
@@ -38,7 +39,7 @@ query {
 }
 `;
 
-const Home = ({ setSelectedPage }: Props) => {
+const Home = ({ setSelectedPage, accessToken }: Props) => {
   const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
   const [offset, setOffset] = useState<number>(0);
   const [limit, setLimit] = useState<number>(1);
@@ -88,7 +89,7 @@ const Home = ({ setSelectedPage }: Props) => {
             </p>
             <button
               type="button"
-              className="mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
+              className="invisible mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
             >
               Add Exercise
             </button>
@@ -181,14 +182,25 @@ const Home = ({ setSelectedPage }: Props) => {
             Here are some example exercises to get you started! Feel free to add
             your own!
           </p>
-          <Link to="/addExercise">
-            <button
-              type="button"
-              className="mx-2 mt-5 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
-            >
-              Add Exercise
-            </button>
-          </Link>
+          {accessToken !== "" ? (
+            <Link to="/addExercise">
+              <button
+                type="button"
+                className="mt-2 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
+              >
+                Add Exercise
+              </button>
+            </Link>
+          ) : (
+            <Link to="/logIn">
+              <button
+                type="button"
+                className="mt-2 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
+              >
+                Add Exercise
+              </button>
+            </Link>
+          )}
         </motion.div>
 
         {/* EXERCISES */}
@@ -199,21 +211,22 @@ const Home = ({ setSelectedPage }: Props) => {
           viewport={{ once: true, amount: 0.5 }}
           variants={container}
         >
-          {exercises.map(
-            (
-              { id, name, equipment, pattern, instructions }: ExerciseType,
-              index: number
-            ) => (
-              <Exercise
-                key={`${id}-${index}`}
-                name={name}
-                equipment={equipment}
-                pattern={pattern}
-                instructions={instructions}
-                setSelectedPage={setSelectedPage}
-              />
-            )
-          )}
+          {exercises.length !== 0 &&
+            exercises.map(
+              (
+                { id, name, equipment, pattern, instructions }: ExerciseType,
+                index: number
+              ) => (
+                <Exercise
+                  key={`${id}-${index}`}
+                  name={name}
+                  equipment={equipment}
+                  pattern={pattern}
+                  instructions={instructions}
+                  setSelectedPage={setSelectedPage}
+                />
+              )
+            )}
         </motion.div>
         <motion.div className="flex justify-between">
           <button
