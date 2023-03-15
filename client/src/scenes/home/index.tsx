@@ -27,7 +27,8 @@ query($offset: Int!, $limit: Int!) {
   getExercises(offset: $offset, limit: $limit) {
     name
     equipment
-    pattern
+    group
+    type
     instructions
   }
 }
@@ -107,7 +108,8 @@ const Home = ({ setSelectedPage, accessToken }: Props) => {
             <Exercise
               name="Loading Name..."
               equipment="Loading..."
-              pattern="Loading..."
+              group="Loading..."
+              type="Loading..."
               instructions="Loading..."
               setSelectedPage={setSelectedPage}
             />
@@ -214,14 +216,22 @@ const Home = ({ setSelectedPage, accessToken }: Props) => {
           {exercises.length !== 0 &&
             exercises.map(
               (
-                { id, name, equipment, pattern, instructions }: ExerciseType,
+                {
+                  id,
+                  name,
+                  equipment,
+                  group,
+                  type,
+                  instructions,
+                }: ExerciseType,
                 index: number
               ) => (
                 <Exercise
                   key={`${id}-${index}`}
                   name={name}
                   equipment={equipment}
-                  pattern={pattern}
+                  group={group}
+                  type={type}
                   instructions={instructions}
                   setSelectedPage={setSelectedPage}
                 />

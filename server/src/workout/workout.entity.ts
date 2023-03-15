@@ -3,6 +3,7 @@ import { GraphQLString } from 'graphql';
 import { Exercise } from 'src/exercise/exercise.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   // ManyToMany,
   ObjectIdColumn,
@@ -31,25 +32,12 @@ export class Workout {
   @Field()
   description: string;
 
-  // @Column()
-  // // @ManyToMany(() => Exercise, (exercise) => exercise.workouts)
-  // @Field((type) => [GraphQLString]) //, { nullable: true })
-  // exerciseIds: string[];
-
   @Column()
   // @ManyToMany(() => Exercise, (exercise) => exercise.workouts)
   @Field((type) => [Exercise]) //, { nullable: true })
   exercises: Exercise[];
 
-  //   @Column()
-  //   @Field((type) => [Int])
-  //   reps: number[];
-
-  //   @Column()
-  //   @Field((type) => [Int])
-  //   sets: number[];
-
-  //   @Column()
-  //   @Field((type) => [Int])
-  //   weight: number[];
+  @CreateDateColumn()
+  @Field()
+  createdAt: Date;
 }

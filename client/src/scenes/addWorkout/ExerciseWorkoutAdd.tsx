@@ -11,7 +11,8 @@ type Props = {
   id: string;
   name: string;
   equipment: string;
-  pattern: string;
+  group: string;
+  type: string;
   instructions: string;
   exerciseList: AddExerciseType[];
   setExerciseList: (value: AddExerciseType[]) => void;
@@ -21,7 +22,8 @@ const ExerciseWorkoutAdd = ({
   id,
   name,
   equipment,
-  pattern,
+  group,
+  type,
   instructions,
   exerciseList,
   setExerciseList,
@@ -37,7 +39,8 @@ const ExerciseWorkoutAdd = ({
     >
       <h4 className="font-bold">{name}</h4>
       <p className="my-3">Equipment: {equipment}</p>
-      <p className="my-3">Pattern: {pattern}</p>
+      <p className="my-3">Group: {group}</p>
+      <p className="my-3">Type: {type}</p>
       <p className="my-3">Instructions: {instructions}</p>
       <button
         className="rounded-lg bg-primary-300 px-10 py-2 transition duration-500 hover:text-white"

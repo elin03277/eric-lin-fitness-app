@@ -32,14 +32,14 @@ export class AuthService {
           username: user.username,
           sub: user.id,
         },
-        { expiresIn: '1m' },
+        { expiresIn: '15m' },
       ),
       refresh_token: this.jwtService.sign(
         {
           username: user.username,
           sub: user.id,
         },
-        { expiresIn: '15m' },
+        { expiresIn: '7d' },
       ),
       user,
     };

@@ -4,9 +4,10 @@
 
 input CreateExerciseInput {
   equipment: String!
+  group: String!
   instructions: String!
   name: String!
-  pattern: String!
+  type: String!
 }
 
 input CreateWorkoutInput {
@@ -16,13 +17,19 @@ input CreateWorkoutInput {
   type: String!
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Exercise {
+  createdAt: DateTime!
   equipment: String!
+  group: String!
   id: ID!
   instructions: String!
   name: String!
-  pattern: String!
-  workoutIds: [ID!]
+  type: String!
 }
 
 type LoginResponse {
@@ -62,10 +69,11 @@ type User {
   id: ID!
   password: String!
   username: String!
-  workoutIds: [String!]
+  workoutIds: [String!]!
 }
 
 type Workout {
+  createdAt: DateTime!
   description: String!
   exercises: [Exercise!]!
   id: ID!

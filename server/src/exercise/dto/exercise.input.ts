@@ -12,7 +12,10 @@ export class CreateExerciseInput {
   equipment: string;
 
   @Field()
-  pattern: string;
+  group: string;
+
+  @Field()
+  type: string;
 
   @Field()
   instructions: string;

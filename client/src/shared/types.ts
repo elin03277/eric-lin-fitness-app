@@ -30,7 +30,8 @@ export interface ExerciseType {
   id: string;
   name: string;
   equipment: string;
-  pattern: string;
+  group: string;
+  type: string;
   instructions: string;
 }
 

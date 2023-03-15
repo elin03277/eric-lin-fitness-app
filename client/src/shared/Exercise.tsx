@@ -11,7 +11,8 @@ const childVariant = {
 type Props = {
   name: string;
   equipment: string;
-  pattern: string;
+  group: string;
+  type: string;
   instructions: string;
   setSelectedPage?: (value: SelectedPage) => void;
 };
@@ -19,7 +20,8 @@ type Props = {
 const Exercise = ({
   name,
   equipment,
-  pattern,
+  group,
+  type,
   instructions,
   setSelectedPage,
 }: Props) => {
@@ -30,7 +32,8 @@ const Exercise = ({
     >
       <h4 className="font-bold">{name}</h4>
       <p className="my-3">Equipment: {equipment}</p>
-      <p className="my-3">Pattern: {pattern}</p>
+      <p className="my-3">Group: {group}</p>
+      <p className="my-3">Type: {type}</p>
       <p className="my-3">Instructions: {instructions}</p>
       {setSelectedPage ? (
         <Link

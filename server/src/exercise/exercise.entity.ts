@@ -7,6 +7,7 @@ import {
   Column,
   ObjectIdColumn,
   ManyToMany,
+  CreateDateColumn,
 } from 'typeorm';
 
 // Exercise entity and object type
@@ -30,17 +31,17 @@ export class Exercise {
 
   @Column()
   @Field()
-  pattern: string;
+  group: string;
+
+  @Column()
+  @Field()
+  type: string;
 
   @Column()
   @Field()
   instructions: string;
 
-  @Column()
-  @Field((type) => [ID], { nullable: true })
-  workoutIds?: string[];
-
-  // @ManyToMany(() => Workout, (workout) => workout.exercises)
-  // @Field((type) => Workout, { nullable: true })
-  // workouts?: Workout[];
+  @CreateDateColumn()
+  @Field()
+  createdAt: Date;
 }

@@ -153,16 +153,16 @@ const Workouts = ({ setSelectedPage, accessToken }: Props) => {
         {/* WORKOUTS */}
         <div className="mt-10 h-[353px] w-full overflow-x-auto overflow-y-hidden">
           <ul className="w-[2800px] whitespace-nowrap">
-            {workouts.map((workout: WorkoutType, index: number) => (
-              <Workout
-                key={`${workout.id}-${index}`}
-                id={workout.id}
-                name={workout.name}
-                description={workout.description}
-                type={workout.type}
-                // onPress={() => handleWorkout(workout.id)}
-              />
-            ))}
+            {workouts.length !== 0 &&
+              workouts.map((workout: WorkoutType, index: number) => (
+                <Workout
+                  key={`${workout.id}-${index}`}
+                  id={workout.id}
+                  name={workout.name}
+                  description={workout.description}
+                  type={workout.type}
+                />
+              ))}
           </ul>
         </div>
       </motion.div>

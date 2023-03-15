@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Exercise } from './exercise.entity';
 import { v4 as uuid } from 'uuid';
 import { CreateExerciseInput } from './dto/exercise.input';
@@ -26,7 +26,8 @@ export class ExerciseService {
       (exercise) =>
         exercise.name.toLowerCase().includes(exerciseFilter) ||
         exercise.equipment.toLowerCase().includes(exerciseFilter) ||
-        exercise.pattern.toLowerCase().includes(exerciseFilter) ||
+        exercise.group.toLowerCase().includes(exerciseFilter) ||
+        exercise.type.toLowerCase().includes(exerciseFilter) ||
         exercise.instructions.toLowerCase().includes(exerciseFilter),
     );
 
@@ -62,13 +63,14 @@ export class ExerciseService {
     createExerciseInput: CreateExerciseInput,
     userId: string,
   ): Promise<Exercise> {
-    const { name, equipment, pattern, instructions } = createExerciseInput;
+    const { name, equipment, group, type, instructions } = createExerciseInput;
 
     const exercise = this.exerciseRepository.create({
       id: uuid(),
       name,
       equipment,
-      pattern,
+      group,
+      type,
       instructions,
     });
 
@@ -76,18 +78,4 @@ export class ExerciseService {
 
     return this.exerciseRepository.save(exercise);
   }
-
-  // async assignWorkoutToExercise(
-  //   exerciseId: string,
-  //   workoutId: string,
-  // ): Promise<string[]> {
-  //   const exercise = await this.getExercise(exerciseId);
-  //   exercise.workoutIds = [...exercise.workoutIds, workoutId];
-
-  //   this.exerciseRepository.update(exercise._id, {
-  //     workoutIds: exercise.workoutIds,
-  //   });
-
-  //   return exercise.workoutIds;
-  // }
 }

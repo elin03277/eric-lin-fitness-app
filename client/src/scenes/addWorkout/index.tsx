@@ -32,7 +32,8 @@ query ($filter: String!){
     id
     name
     equipment
-    pattern
+    group
+    type    
     instructions
   }
 }
@@ -159,7 +160,8 @@ const AddWorkout = ({
             <Exercise
               name="Loading Name..."
               equipment="Loading..."
-              pattern="Loading..."
+              group="Loading..."
+              type="Loading..."
               instructions="Loading..."
               setSelectedPage={setSelectedPage}
             />
@@ -257,7 +259,7 @@ const AddWorkout = ({
                 placeholder="DESCRIPTION"
                 {...registerWorkout("description", {
                   required: true,
-                  maxLength: 2000,
+                  maxLength: 500,
                 })}
               />
               {errorsWorkout.description && (
@@ -265,7 +267,7 @@ const AddWorkout = ({
                   {errorsWorkout.description.type === "required" &&
                     "This field is required."}
                   {errorsWorkout.description.type === "maxLength" &&
-                    "Max length is 2000 char."}
+                    "Max length is 500 char."}
                 </p>
               )}
               {accessToken !== "" ? (
@@ -375,13 +377,21 @@ const AddWorkout = ({
           variants={container}
         >
           {exercises.map(
-            ({ id, name, equipment, pattern, instructions }: ExerciseType) => (
+            ({
+              id,
+              name,
+              equipment,
+              group,
+              type,
+              instructions,
+            }: ExerciseType) => (
               <ExerciseWorkoutAdd
                 key={id}
                 id={id}
                 name={name}
                 equipment={equipment}
-                pattern={pattern}
+                group={group}
+                type={type}
                 instructions={instructions}
                 exerciseList={exerciseList}
                 setExerciseList={setExerciseList}

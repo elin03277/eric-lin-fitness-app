@@ -29,7 +29,8 @@ query ($filter: String!){
     id
     name
     equipment
-    pattern
+    group
+    type
     instructions
   }
 }
@@ -118,7 +119,8 @@ const Exercises = ({ setSelectedPage, accessToken }: Props) => {
             <Exercise
               name="Loading Name..."
               equipment="Loading..."
-              pattern="Loading..."
+              group="Loading..."
+              type="Loading..."
               instructions="Loading..."
               setSelectedPage={setSelectedPage}
             />
@@ -211,16 +213,18 @@ const Exercises = ({ setSelectedPage, accessToken }: Props) => {
           viewport={{ once: true }}
           variants={container}
         >
-          {exercises.map((exercise: ExerciseType) => (
-            <Exercise
-              key={exercise.id}
-              name={exercise.name}
-              equipment={exercise.equipment}
-              pattern={exercise.pattern}
-              instructions={exercise.instructions}
-              setSelectedPage={setSelectedPage}
-            />
-          ))}
+          {exercises.length !== 0 &&
+            exercises.map((exercise: ExerciseType) => (
+              <Exercise
+                key={exercise.id}
+                name={exercise.name}
+                equipment={exercise.equipment}
+                group={exercise.group}
+                type={exercise.type}
+                instructions={exercise.instructions}
+                setSelectedPage={setSelectedPage}
+              />
+            ))}
         </motion.div>
       </motion.div>
     </div>

@@ -18,7 +18,8 @@ const CreateExercise = `
         createExercise(createExerciseInput: $createExerciseInput) {
             name
             equipment
-            pattern
+            group
+            type
             instructions
         }
     }
@@ -141,23 +142,41 @@ const AddExercise = ({
                     "Max length is 30 char."}
                 </p>
               )}
+
               <input
                 className={inputStyles}
                 type="text"
-                placeholder="MOVEMENT PATTERN"
-                {...register("pattern", {
+                placeholder="MUSCLE GROUP"
+                {...register("group", {
                   required: true,
-                  maxLength: 10,
+                  maxLength: 30,
                 })}
               />
-              {errors.pattern && (
+              {errors.group && (
                 <p className="text-primary-500">
-                  {errors.pattern.type === "required" &&
+                  {errors.group.type === "required" &&
                     "This field is required."}
-                  {errors.pattern.type === "maxLength" &&
-                    "Max length is 10 char."}
+                  {errors.group.type === "maxLength" &&
+                    "Max length is 30 char."}
                 </p>
               )}
+
+              <input
+                className={inputStyles}
+                type="text"
+                placeholder="EXERCISE TYPE"
+                {...register("type", {
+                  required: true,
+                  maxLength: 30,
+                })}
+              />
+              {errors.type && (
+                <p className="text-primary-500">
+                  {errors.type.type === "required" && "This field is required."}
+                  {errors.type.type === "maxLength" && "Max length is 30 char."}
+                </p>
+              )}
+
               <textarea
                 className={inputStyles}
                 rows={4}
@@ -165,7 +184,7 @@ const AddExercise = ({
                 placeholder="INSTRUCTIONS"
                 {...register("instructions", {
                   required: true,
-                  maxLength: 2000,
+                  maxLength: 500,
                 })}
               />
               {errors.instructions && (
@@ -173,7 +192,7 @@ const AddExercise = ({
                   {errors.instructions.type === "required" &&
                     "This field is required."}
                   {errors.instructions.type === "maxLength" &&
-                    "Max length is 2000 char."}
+                    "Max length is 500 char."}
                 </p>
               )}
               {accessToken !== "" ? (
@@ -219,11 +238,18 @@ const AddExercise = ({
                 <Exercise
                   name={data.createExercise.name}
                   equipment={data.createExercise.equipment}
-                  pattern={data.createExercise.pattern}
+                  group={data.createExercise.group}
+                  type={data.createExercise.type}
                   instructions={data.createExercise.instructions}
                 />
               ) : (
-                <Exercise name="Name" equipment="" pattern="" instructions="" />
+                <Exercise
+                  name="Name"
+                  equipment=""
+                  group=""
+                  type=""
+                  instructions=""
+                />
               )}
             </div>
           </motion.div>

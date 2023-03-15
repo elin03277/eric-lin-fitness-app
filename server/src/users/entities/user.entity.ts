@@ -25,6 +25,6 @@ export class User {
   exerciseIds: string[];
 
   @Column()
-  @Field((type) => [GraphQLString], { nullable: true })
-  workoutIds?: string[];
+  @Field((type) => [GraphQLString])
+  workoutIds: string[];
 }

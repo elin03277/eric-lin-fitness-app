@@ -31,7 +31,8 @@ query ($id: String!){
       id
       name
       equipment
-      pattern
+      group
+      type
       instructions
     }
   }
@@ -96,7 +97,8 @@ const DisplayWorkout = ({ setSelectedPage }: Props) => {
             <Exercise
               name="Loading Name..."
               equipment="Loading..."
-              pattern="Loading..."
+              group="Loading..."
+              type="Loading..."
               instructions="Loading..."
               setSelectedPage={setSelectedPage}
             />
@@ -139,20 +141,29 @@ const DisplayWorkout = ({ setSelectedPage }: Props) => {
           viewport={{ once: true }}
           variants={container}
         >
-          {workout.exercises.map(
-            (
-              { id, name, equipment, pattern, instructions }: ExerciseType,
-              index: number
-            ) => (
-              <Exercise
-                key={`${id}-${index}`}
-                name={name}
-                equipment={equipment}
-                pattern={pattern}
-                instructions={instructions}
-              />
-            )
-          )}
+          {workout.exercises.length !== 0 &&
+            workout.exercises.map(
+              (
+                {
+                  id,
+                  name,
+                  equipment,
+                  group,
+                  type,
+                  instructions,
+                }: ExerciseType,
+                index: number
+              ) => (
+                <Exercise
+                  key={`${id}-${index}`}
+                  name={name}
+                  equipment={equipment}
+                  group={group}
+                  type={type}
+                  instructions={instructions}
+                />
+              )
+            )}
         </motion.div>
       </motion.div>
     </div>
