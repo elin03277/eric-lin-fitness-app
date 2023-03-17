@@ -30,6 +30,7 @@ type Exercise {
   instructions: String!
   name: String!
   type: String!
+  userId: String!
 }
 
 type LoginResponse {
@@ -53,13 +54,13 @@ type Mutation {
 }
 
 type Query {
-  countExercises: Int!
+  countInitialExercises: Int!
   decode: User!
   exercise(id: String!): Exercise!
-  getExercises(limit: Int!, offset: Int!): [Exercise!]!
-  getFilteredExercises(filter: String!): [Exercise!]!
+  getInitialExercises(limit: Int!, offset: Int!): [Exercise!]!
+  getInitialFilteredExercises(filter: String!): [Exercise!]!
+  getInitialWorkouts: [Workout!]!
   getWorkout(id: String!): Workout!
-  getWorkouts: [Workout!]!
   user(username: String!): User!
   users: [User!]!
 }
@@ -79,4 +80,5 @@ type Workout {
   id: ID!
   name: String!
   type: String!
+  userId: String!
 }

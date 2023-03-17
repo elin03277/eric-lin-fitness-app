@@ -21,8 +21,11 @@ export class WorkoutService {
     return this.workoutRepository.findOneByOrFail({ id });
   }
 
-  async getWorkouts(): Promise<Workout[]> {
-    return this.workoutRepository.find();
+  async getInitialWorkouts(): Promise<Workout[]> {
+    return this.workoutRepository.find({
+      where: { userId: 'dfd51180-13a6-460d-b123-2574290cf122' },
+      order: { createdAt: 'DESC' },
+    });
   }
 
   // async getWorkoutExercises(exerciseIds: string[]): Promise<Exercise[]> {
@@ -48,6 +51,7 @@ export class WorkoutService {
       type,
       description,
       exercises: workoutExercises,
+      userId: userId,
     });
 
     this.usersService.assignWorkoutToUser(userId, workout.id);

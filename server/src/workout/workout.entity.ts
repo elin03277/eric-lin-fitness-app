@@ -5,6 +5,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   // ManyToMany,
   ObjectIdColumn,
   PrimaryColumn,
@@ -36,6 +37,11 @@ export class Workout {
   // @ManyToMany(() => Exercise, (exercise) => exercise.workouts)
   @Field((type) => [Exercise]) //, { nullable: true })
   exercises: Exercise[];
+
+  @Index()
+  @Column()
+  @Field()
+  userId: string;
 
   @CreateDateColumn()
   @Field()

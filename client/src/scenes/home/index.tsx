@@ -24,7 +24,7 @@ const buttonStyle = `mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition
 
 const GetExerciseQuery = `
 query($offset: Int!, $limit: Int!) {
-  getExercises(offset: $offset, limit: $limit) {
+  getInitialExercises(offset: $offset, limit: $limit) {
     name
     equipment
     group
@@ -34,9 +34,9 @@ query($offset: Int!, $limit: Int!) {
 }
 `;
 
-const GetExerciseCount = `
+const GetInitialExerciseCount = `
 query {
-  countExercises
+  countInitialExercises
 }
 `;
 
@@ -56,11 +56,11 @@ const Home = ({ setSelectedPage, accessToken }: Props) => {
   });
 
   const [countResult] = useQuery({
-    query: GetExerciseCount,
+    query: GetInitialExerciseCount,
   });
 
   const exercises = useMemo(
-    () => result.data?.getExercises || [],
+    () => result.data?.getInitialExercises || [],
     [result.data]
   );
 
@@ -127,7 +127,7 @@ const Home = ({ setSelectedPage, accessToken }: Props) => {
     );
 
   const count = countResult.data;
-  const pageLimit = Math.floor(count.countExercises / limit);
+  const pageLimit = Math.floor(count.countInitialExercises / limit);
 
   const handlePreviousButton = () => {
     console.log(pages);
@@ -209,7 +209,7 @@ const Home = ({ setSelectedPage, accessToken }: Props) => {
         <motion.div
           className="mt-5 items-center justify-between gap-8" // md:flex"
           initial="hidden"
-          whileInView="visible"
+          animate="visible"
           viewport={{ once: true, amount: 0.5 }}
           variants={container}
         >

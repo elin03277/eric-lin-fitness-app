@@ -29,27 +29,22 @@ export class ExerciseResolver {
   }
 
   @Query((returns) => [Exercise])
-  getFilteredExercises(@Args('filter') filter: string) {
-    return this.exerciseService.getFilteredExercises(filter);
+  getInitialFilteredExercises(@Args('filter') filter: string) {
+    return this.exerciseService.getInitialFilteredExercises(filter);
   }
 
   @Query((returns) => [Exercise])
-  getExercises(
+  getInitialExercises(
     @Args('offset', { type: () => Int }) offset: number,
     @Args('limit', { type: () => Int }) limit: number,
   ) {
-    return this.exerciseService.getExercises(offset, limit);
+    return this.exerciseService.getInitialExercises(offset, limit);
   }
 
   @Query((returns) => GraphQLInt)
-  countExercises() {
-    return this.exerciseService.countExercises();
+  countInitialExercises() {
+    return this.exerciseService.countInitialExercises();
   }
-
-  // @ResolveField((returns) => Workout)
-  // workout(@Parent() exercise: Exercise) {
-  //   return this.exerciseService.getWorkout(exercise.id);
-  // }
 
   // @Mutation((returns) => [ID])
   // assignWorkoutToExercise(

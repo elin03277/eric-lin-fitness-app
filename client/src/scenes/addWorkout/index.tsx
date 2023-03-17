@@ -26,9 +26,9 @@ type Props = {
 
 const buttonStyle = `mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`;
 
-const GetFilteredExerciseQuery = `
+const GetInitialFilteredExerciseQuery = `
 query ($filter: String!){
-  getFilteredExercises(filter: $filter) {
+  getInitialFilteredExercises(filter: $filter) {
     id
     name
     equipment
@@ -58,7 +58,7 @@ const AddWorkout = ({
   const [workoutId, setWorkoutId] = useState<string>("");
 
   const [result, filterSearch] = useQuery({
-    query: GetFilteredExerciseQuery,
+    query: GetInitialFilteredExerciseQuery,
     variables: { filter },
   });
 
@@ -77,7 +77,7 @@ const AddWorkout = ({
   }, [error]);
 
   const exercises = useMemo(
-    () => result.data?.getFilteredExercises || [],
+    () => result.data?.getInitialFilteredExercises || [],
     [result.data]
   );
 

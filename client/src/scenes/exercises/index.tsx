@@ -23,9 +23,9 @@ type Props = {
 
 const buttonStyle = `mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`;
 
-const GetFilteredExerciseQuery = `
+const GetInitialFilteredExerciseQuery = `
 query ($filter: String!){
-  getFilteredExercises(filter: $filter) {
+  getInitialFilteredExercises(filter: $filter) {
     id
     name
     equipment
@@ -49,7 +49,7 @@ const Exercises = ({ setSelectedPage, accessToken }: Props) => {
   const [filter, setFilter] = useState<string>("");
 
   const [result] = useQuery({
-    query: GetFilteredExerciseQuery,
+    query: GetInitialFilteredExerciseQuery,
     variables: { filter },
   });
 
@@ -58,7 +58,7 @@ const Exercises = ({ setSelectedPage, accessToken }: Props) => {
   });
 
   const exercises = useMemo(
-    () => result.data?.getFilteredExercises || [],
+    () => result.data?.getInitialFilteredExercises || [],
     [result.data]
   );
 
@@ -167,12 +167,6 @@ const Exercises = ({ setSelectedPage, accessToken }: Props) => {
                   maxLength: 30,
                 })}
               />
-              {/* {errorsFilter.filter && (
-                <p className="text-primary-500">
-                  {errorsFilter.filter.type === "maxLength" &&
-                    "Max length is 30 char."}
-                </p>
-              )} */}
               <button
                 className="mb-5 whitespace-nowrap rounded-lg bg-primary-300 px-10 py-3 transition duration-500 hover:text-white"
                 type="submit"

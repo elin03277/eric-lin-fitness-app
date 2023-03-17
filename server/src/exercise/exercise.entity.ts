@@ -8,6 +8,7 @@ import {
   ObjectIdColumn,
   ManyToMany,
   CreateDateColumn,
+  Index,
 } from 'typeorm';
 
 // Exercise entity and object type
@@ -40,6 +41,11 @@ export class Exercise {
   @Column()
   @Field()
   instructions: string;
+
+  @Index()
+  @Column()
+  @Field()
+  userId: string;
 
   @CreateDateColumn()
   @Field()

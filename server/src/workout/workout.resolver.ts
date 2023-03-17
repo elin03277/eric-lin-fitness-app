@@ -17,8 +17,8 @@ export class WorkoutResolver {
   }
 
   @Query((returns) => [Workout])
-  getWorkouts() {
-    return this.workoutService.getWorkouts();
+  getInitialWorkouts() {
+    return this.workoutService.getInitialWorkouts();
   }
 
   // @Query((returns) => [Exercise])

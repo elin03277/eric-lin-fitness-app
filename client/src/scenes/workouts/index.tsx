@@ -23,9 +23,9 @@ type Props = {
 
 const buttonStyle = `mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`;
 
-const GetWorkouts = `
+const GetInitialWorkouts = `
 query {
-  getWorkouts {
+  getInitialWorkouts {
     id
     name
     type
@@ -38,15 +38,18 @@ const Workouts = ({ setSelectedPage, accessToken }: Props) => {
   const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
 
   const [result] = useQuery({
-    query: GetWorkouts,
+    query: GetInitialWorkouts,
   });
 
-  const workouts = useMemo(() => result.data?.getWorkouts || [], [result.data]);
+  const initialWorkouts = useMemo(
+    () => result.data?.getInitialWorkouts || [],
+    [result.data]
+  );
   const inputStyles = `mb-5 w-full rounded-lg bg-primary-300 px-5 py-3 placeholder-white`;
 
-  const handleWorkout = (workoutId: string) => {
-    console.log(`Workout clicked: ${workoutId}`);
-  };
+  // const handleWorkout = (workoutId: string) => {
+  //   console.log(`Workout clicked: ${workoutId}`);
+  // };
 
   if (result.fetching)
     return (
@@ -153,8 +156,8 @@ const Workouts = ({ setSelectedPage, accessToken }: Props) => {
         {/* WORKOUTS */}
         <div className="mt-10 h-[353px] w-full overflow-x-auto overflow-y-hidden">
           <ul className="w-[2800px] whitespace-nowrap">
-            {workouts.length !== 0 &&
-              workouts.map((workout: WorkoutType, index: number) => (
+            {initialWorkouts.length !== 0 &&
+              initialWorkouts.map((workout: WorkoutType, index: number) => (
                 <Workout
                   key={`${workout.id}-${index}`}
                   id={workout.id}

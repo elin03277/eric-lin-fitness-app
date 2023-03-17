@@ -18,9 +18,12 @@ export class ExerciseService {
     return this.exerciseRepository.findOneByOrFail({ id });
   }
 
-  async getFilteredExercises(filter: string): Promise<Exercise[]> {
+  async getInitialFilteredExercises(filter: string): Promise<Exercise[]> {
     const exerciseFilter = filter.toLowerCase();
-    const exercises = await this.exerciseRepository.find();
+    const exercises = await this.exerciseRepository.find({
+      where: { userId: 'dfd51180-13a6-460d-b123-2574290cf122' },
+      order: { createdAt: 'DESC' },
+    });
 
     const filteredExercises = exercises.filter(
       (exercise) =>
@@ -48,15 +51,22 @@ export class ExerciseService {
   //   return workoutExercises;
   // }
 
-  async getExercises(offset: number, limit: number): Promise<Exercise[]> {
+  async getInitialExercises(
+    offset: number,
+    limit: number,
+  ): Promise<Exercise[]> {
     return this.exerciseRepository.find({
+      where: { userId: 'dfd51180-13a6-460d-b123-2574290cf122' },
+      order: { createdAt: 'DESC' },
       skip: offset,
       take: limit,
     });
   }
 
-  async countExercises(): Promise<number> {
-    return this.exerciseRepository.count();
+  async countInitialExercises(): Promise<number> {
+    return this.exerciseRepository.countBy({
+      userId: 'dfd51180-13a6-460d-b123-2574290cf122',
+    });
   }
 
   async createExercise(
@@ -72,6 +82,7 @@ export class ExerciseService {
       group,
       type,
       instructions,
+      userId: userId,
     });
 
     this.usersService.assignExerciseToUser(userId, exercise.id);
