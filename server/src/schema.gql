@@ -60,6 +60,8 @@ type Query {
   getInitialExercises(limit: Int!, offset: Int!): [Exercise!]!
   getInitialFilteredExercises(filter: String!): [Exercise!]!
   getInitialWorkouts: [Workout!]!
+  getUserFilteredExercises(filter: String!): [Exercise!]!
+  getUserWorkouts: [Workout!]!
   getWorkout(id: String!): Workout!
   user(username: String!): User!
   users: [User!]!

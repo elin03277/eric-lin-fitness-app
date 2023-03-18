@@ -29,11 +29,6 @@ export class ExerciseResolver {
   }
 
   @Query((returns) => [Exercise])
-  getInitialFilteredExercises(@Args('filter') filter: string) {
-    return this.exerciseService.getInitialFilteredExercises(filter);
-  }
-
-  @Query((returns) => [Exercise])
   getInitialExercises(
     @Args('offset', { type: () => Int }) offset: number,
     @Args('limit', { type: () => Int }) limit: number,
@@ -46,13 +41,22 @@ export class ExerciseResolver {
     return this.exerciseService.countInitialExercises();
   }
 
-  // @Mutation((returns) => [ID])
-  // assignWorkoutToExercise(
-  //   @Args('exerciseId', { type: () => ID }) exerciseId: string,
-  //   @Args('workoutId', { type: () => ID }) workoutId: string,
-  // ) {
-  //   return this.exerciseService.assignWorkoutToExercise(exerciseId, workoutId);
-  // }
+  @Query((returns) => [Exercise])
+  getInitialFilteredExercises(@Args('filter') filter: string) {
+    return this.exerciseService.getInitialFilteredExercises(filter);
+  }
+
+  @Query((returns) => [Exercise])
+  @UseGuards(JwtAuthGuard)
+  getUserFilteredExercises(
+    @Args('filter') filter: string,
+    @Context('req') req,
+  ) {
+    return this.exerciseService.getUserFilteredExercises(
+      filter,
+      req.user.userId,
+    );
+  }
 
   @Mutation((returns) => Exercise)
   @UseGuards(JwtAuthGuard)

@@ -34,17 +34,47 @@ query {
 }
 `;
 
+const GetUserWorkouts = `
+query {
+  getUserWorkouts {
+    id
+    name
+    type
+    description
+  }
+}
+`;
+
 const Workouts = ({ setSelectedPage, accessToken }: Props) => {
   const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
-
   const [result] = useQuery({
     query: GetInitialWorkouts,
   });
+
+  const [userResult] = useQuery({
+    query: GetUserWorkouts,
+    context: {
+      fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
+    },
+    pause: true,
+  });
+
+  const userWorkouts = useMemo(
+    () => userResult.data?.getUserWorkouts || [],
+    [userResult.data]
+  );
 
   const initialWorkouts = useMemo(
     () => result.data?.getInitialWorkouts || [],
     [result.data]
   );
+
+  const [workouts, setWorkouts] = useState(initialWorkouts);
+
+  useEffect(() => {
+    setWorkouts(userWorkouts.length ? userWorkouts : initialWorkouts);
+  }, [userWorkouts]);
+
   const inputStyles = `mb-5 w-full rounded-lg bg-primary-300 px-5 py-3 placeholder-white`;
 
   // const handleWorkout = (workoutId: string) => {
@@ -153,7 +183,24 @@ const Workouts = ({ setSelectedPage, accessToken }: Props) => {
           )}
         </motion.div>
 
-        {/* WORKOUTS */}
+        {accessToken !== "" ? (
+          <div className="mt-10 h-[353px] w-full overflow-x-auto overflow-y-hidden">
+            <ul className="w-[2800px] whitespace-nowrap">
+              {workouts.length !== 0 &&
+                workouts.map((workout: WorkoutType, index: number) => (
+                  <Workout
+                    key={`${workout.id}-${index}`}
+                    id={workout.id}
+                    name={workout.name}
+                    description={workout.description}
+                    type={workout.type}
+                  />
+                ))}
+            </ul>
+          </div>
+        ) : (
+          <></>
+        )}
         <div className="mt-10 h-[353px] w-full overflow-x-auto overflow-y-hidden">
           <ul className="w-[2800px] whitespace-nowrap">
             {initialWorkouts.length !== 0 &&

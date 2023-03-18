@@ -28,19 +28,23 @@ export class WorkoutService {
     });
   }
 
-  // async getWorkoutExercises(exerciseIds: string[]): Promise<Exercise[]> {
-  //   return this.exerciseService.getWorkoutExercises(exerciseIds);
-  // }
+  async getUserWorkouts(userId: string): Promise<Workout[]> {
+    return this.workoutRepository.find({
+      where: {
+        $or: [
+          { userId: userId },
+          { userId: 'dfd51180-13a6-460d-b123-2574290cf122' },
+        ],
+      },
+      order: { createdAt: 'DESC' },
+    } as unknown);
+  }
 
   async createWorkout(
     createWorkoutInput: CreateWorkoutInput,
     userId: string,
   ): Promise<Workout> {
     const { name, type, description, exerciseIds } = createWorkoutInput;
-    // const workoutExercises = await this.exerciseService.getWorkoutExercises(
-    //   exerciseIds,
-    // );
-
     const workoutExercises = await Promise.all(
       exerciseIds.map((id) => this.exerciseService.getExercise(id)),
     );

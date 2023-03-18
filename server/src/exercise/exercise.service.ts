@@ -37,19 +37,32 @@ export class ExerciseService {
     return filteredExercises;
   }
 
-  // async getWorkoutExercises(exerciseIds: string[]): Promise<Exercise[]> {
-  //   const workoutExercises = [];
+  async getUserFilteredExercises(
+    filter: string,
+    userId: string,
+  ): Promise<Exercise[]> {
+    const exerciseFilter = filter.toLowerCase();
+    const exercises = await this.exerciseRepository.find({
+      where: {
+        $or: [
+          { userId: userId },
+          { userId: 'dfd51180-13a6-460d-b123-2574290cf122' },
+        ],
+      },
+      order: { createdAt: 'DESC' },
+    } as unknown);
 
-  //   exerciseIds.forEach((id) => {
-  //     const exercise = this.getExercise(id);
+    const filteredExercises = exercises.filter(
+      (exercise) =>
+        exercise.name.toLowerCase().includes(exerciseFilter) ||
+        exercise.equipment.toLowerCase().includes(exerciseFilter) ||
+        exercise.group.toLowerCase().includes(exerciseFilter) ||
+        exercise.type.toLowerCase().includes(exerciseFilter) ||
+        exercise.instructions.toLowerCase().includes(exerciseFilter),
+    );
 
-  //     if (exercise) {
-  //       workoutExercises.push(exercise);
-  //     }
-  //   });
-
-  //   return workoutExercises;
-  // }
+    return filteredExercises;
+  }
 
   async getInitialExercises(
     offset: number,

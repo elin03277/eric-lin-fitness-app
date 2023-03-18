@@ -21,12 +21,12 @@ export class WorkoutResolver {
     return this.workoutService.getInitialWorkouts();
   }
 
-  // @Query((returns) => [Exercise])
-  // getWorkoutExercises(
-  //   @Args('exerciseIds', { type: () => [GraphQLString] }) exerciseIds: string[],
-  // ) {
-  //   return this.workoutService.getWorkoutExercises(exerciseIds);
-  // }
+  @Query((returns) => [Workout])
+  @UseGuards(JwtAuthGuard)
+  getUserWorkouts(@Context('req') req) {
+    console.log(req.user.userId);
+    return this.workoutService.getUserWorkouts(req.user.userId);
+  }
 
   @Mutation((returns) => Workout)
   @UseGuards(JwtAuthGuard)
