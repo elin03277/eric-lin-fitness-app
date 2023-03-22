@@ -177,7 +177,7 @@ const Exercises = ({ setSelectedPage, accessToken }: Props) => {
               </button>
             </div>
           </form>
-          {accessToken !== "" ? (
+          {accessToken ? (
             <Link to="/addExercise">
               <button
                 type="button"

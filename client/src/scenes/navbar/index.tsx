@@ -78,7 +78,7 @@ const Navbar = ({
                   />
                 </div>
                 <div className={`${flexBetween} gap-8`}>
-                  {accessToken !== "" ? (
+                  {accessToken ? (
                     <div
                       className="cursor-pointer transition duration-500 hover:text-primary-300"
                       onClick={() => setAccessToken("")}
@@ -156,7 +156,7 @@ const Navbar = ({
               selectedPage={selectedPage}
               setSelectedPage={setSelectedPage}
             />
-            {accessToken !== "" ? (
+            {accessToken ? (
               <div
                 className="cursor-pointer transition duration-500 hover:text-primary-300"
                 onClick={() => setAccessToken("")}

@@ -184,7 +184,7 @@ const Home = ({ setSelectedPage, accessToken }: Props) => {
             Here are some example exercises to get you started! Feel free to add
             your own!
           </p>
-          {accessToken !== "" ? (
+          {accessToken ? (
             <Link to="/addExercise">
               <button
                 type="button"

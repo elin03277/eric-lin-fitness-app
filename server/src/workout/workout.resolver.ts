@@ -24,7 +24,6 @@ export class WorkoutResolver {
   @Query((returns) => [Workout])
   @UseGuards(JwtAuthGuard)
   getUserWorkouts(@Context('req') req) {
-    console.log(req.user.userId);
     return this.workoutService.getUserWorkouts(req.user.userId);
   }
 

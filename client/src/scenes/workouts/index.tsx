@@ -18,6 +18,7 @@ const container = {
 
 type Props = {
   setSelectedPage: (value: SelectedPage) => void;
+  setAccessToken: (value: string) => void;
   accessToken: string;
 };
 
@@ -45,18 +46,14 @@ query {
 }
 `;
 
-const Workouts = ({ setSelectedPage, accessToken }: Props) => {
-  const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
+const Workouts = ({ setSelectedPage, setAccessToken, accessToken }: Props) => {
+  const [paused, setPaused] = useState<boolean>(true);
   const [result] = useQuery({
     query: GetInitialWorkouts,
   });
 
-  const [userResult] = useQuery({
+  const [userResult, setUserResult] = useQuery({
     query: GetUserWorkouts,
-    context: {
-      fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
-    },
-    pause: true,
   });
 
   const userWorkouts = useMemo(
@@ -69,19 +66,22 @@ const Workouts = ({ setSelectedPage, accessToken }: Props) => {
     [result.data]
   );
 
-  const [workouts, setWorkouts] = useState(initialWorkouts);
-
-  useEffect(() => {
-    setWorkouts(userWorkouts.length ? userWorkouts : initialWorkouts);
-  }, [userWorkouts]);
-
   const inputStyles = `mb-5 w-full rounded-lg bg-primary-300 px-5 py-3 placeholder-white`;
 
-  // const handleWorkout = (workoutId: string) => {
-  //   console.log(`Workout clicked: ${workoutId}`);
-  // };
+  useEffect(() => {
+    setUserResult({
+      fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
+    });
+    setPaused(false);
+  }, [accessToken]);
 
-  if (result.fetching)
+  useEffect(() => {
+    if (userResult.error) {
+      setAccessToken("");
+    }
+  }, [userResult.error]);
+
+  if (result.fetching || userResult.fetching)
     return (
       <div className="bg-gray-20">
         <motion.div
@@ -162,7 +162,7 @@ const Workouts = ({ setSelectedPage, accessToken }: Props) => {
             Here are some example workouts to get you started! Feel free to add
             your own!
           </p>
-          {accessToken !== "" ? (
+          {accessToken ? (
             <Link to="/addWorkout">
               <button
                 type="button"
@@ -183,11 +183,11 @@ const Workouts = ({ setSelectedPage, accessToken }: Props) => {
           )}
         </motion.div>
 
-        {accessToken !== "" ? (
+        {accessToken && !userResult.error ? (
           <div className="mt-10 h-[353px] w-full overflow-x-auto overflow-y-hidden">
             <ul className="w-[2800px] whitespace-nowrap">
-              {workouts.length !== 0 &&
-                workouts.map((workout: WorkoutType, index: number) => (
+              {userWorkouts &&
+                userWorkouts.map((workout: WorkoutType, index: number) => (
                   <Workout
                     key={`${workout.id}-${index}`}
                     id={workout.id}
@@ -199,22 +199,21 @@ const Workouts = ({ setSelectedPage, accessToken }: Props) => {
             </ul>
           </div>
         ) : (
-          <></>
+          <div className="mt-10 h-[353px] w-full overflow-x-auto overflow-y-hidden">
+            <ul className="w-[2800px] whitespace-nowrap">
+              {initialWorkouts &&
+                initialWorkouts.map((workout: WorkoutType, index: number) => (
+                  <Workout
+                    key={`${workout.id}-${index}`}
+                    id={workout.id}
+                    name={workout.name}
+                    description={workout.description}
+                    type={workout.type}
+                  />
+                ))}
+            </ul>
+          </div>
         )}
-        <div className="mt-10 h-[353px] w-full overflow-x-auto overflow-y-hidden">
-          <ul className="w-[2800px] whitespace-nowrap">
-            {initialWorkouts.length !== 0 &&
-              initialWorkouts.map((workout: WorkoutType, index: number) => (
-                <Workout
-                  key={`${workout.id}-${index}`}
-                  id={workout.id}
-                  name={workout.name}
-                  description={workout.description}
-                  type={workout.type}
-                />
-              ))}
-          </ul>
-        </div>
       </motion.div>
     </div>
   );

@@ -66,6 +66,7 @@ function App() {
           element={
             <Workouts
               setSelectedPage={setSelectedPage}
+              setAccessToken={setAccessToken}
               accessToken={accessToken}
             />
           }

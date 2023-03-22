@@ -195,7 +195,7 @@ const AddExercise = ({
                     "Max length is 500 char."}
                 </p>
               )}
-              {accessToken !== "" ? (
+              {accessToken ? (
                 <button
                   type="submit"
                   className="mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white"

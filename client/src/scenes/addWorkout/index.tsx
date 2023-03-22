@@ -270,7 +270,7 @@ const AddWorkout = ({
                     "Max length is 500 char."}
                 </p>
               )}
-              {accessToken !== "" ? (
+              {accessToken ? (
                 exerciseList.length !== 0 ? (
                   <button
                     type="submit"
