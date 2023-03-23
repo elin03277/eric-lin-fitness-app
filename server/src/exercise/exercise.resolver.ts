@@ -49,11 +49,11 @@ export class ExerciseResolver {
   @Query((returns) => [Exercise])
   @UseGuards(JwtAuthGuard)
   getUserFilteredExercises(
-    @Args('filter') filter: string,
+    @Args('userFilter') userFilter: string,
     @Context('req') req,
   ) {
     return this.exerciseService.getUserFilteredExercises(
-      filter,
+      userFilter,
       req.user.userId,
     );
   }

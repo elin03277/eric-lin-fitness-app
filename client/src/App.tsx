@@ -57,6 +57,7 @@ function App() {
           element={
             <Exercises
               setSelectedPage={setSelectedPage}
+              setAccessToken={setAccessToken}
               accessToken={accessToken}
             />
           }

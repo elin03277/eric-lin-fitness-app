@@ -44,8 +44,10 @@ const LogIn = ({ setSelectedPage, setAccessToken }: Props) => {
   } = useForm();
 
   const onSubmit = async (data: any = {}) => {
-    await logIn({ loginUserInput: data });
-    setTextButton("BACK");
+    logIn({ loginUserInput: data });
+    if (error) {
+      setTextButton("BACK");
+    }
     reset();
   };
 

@@ -18,6 +18,7 @@ const container = {
 
 type Props = {
   setSelectedPage: (value: SelectedPage) => void;
+  setAccessToken: (value: string) => void;
   accessToken: string;
 };
 
@@ -36,31 +37,66 @@ query ($filter: String!){
 }
 `;
 
-const GetExerciseCount = `
-query {
-  countExercises
+const GetUserFilteredQuery = `
+query ($userFilter: String!){
+  getUserFilteredExercises(userFilter: $userFilter) {
+    id
+    name
+    equipment
+    group
+    type
+    instructions
+  }
 }
 `;
 
-const Exercises = ({ setSelectedPage, accessToken }: Props) => {
+const Exercises = ({ setSelectedPage, setAccessToken, accessToken }: Props) => {
   const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
-  const [offset, setOffset] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(3);
   const [filter, setFilter] = useState<string>("");
+  const [userFilter, setUserFilter] = useState<string>("");
 
   const [result] = useQuery({
     query: GetInitialFilteredExerciseQuery,
     variables: { filter },
   });
 
-  const [countResult] = useQuery({
-    query: GetExerciseCount,
+  const [userResult, setUserHeader] = useQuery({
+    query: GetUserFilteredQuery,
+    variables: { userFilter },
+    pause: true,
   });
 
-  const exercises = useMemo(
+  const initialExercises = useMemo(
     () => result.data?.getInitialFilteredExercises || [],
     [result.data]
   );
+
+  const userExercises = useMemo(
+    () => userResult.data?.getUserFilteredExercises || [],
+    [userResult.data]
+  );
+
+  useEffect(() => {
+    if (accessToken) {
+      setUserHeader({
+        fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
+      });
+    }
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (accessToken) {
+      setUserHeader({
+        fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
+      });
+    }
+  }, [userFilter]);
+
+  useEffect(() => {
+    if (userResult.error) {
+      setAccessToken("");
+    }
+  }, [userResult.error]);
 
   const inputStyles = `mb-5 w-full rounded-lg bg-primary-300 px-5 py-3 placeholder-white`;
 
@@ -71,11 +107,15 @@ const Exercises = ({ setSelectedPage, accessToken }: Props) => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = async (data: any = {}) => {
+  const onInitialSubmit = async (data: any = {}) => {
     setFilter(data.filter);
   };
 
-  if (result.fetching || countResult.fetching)
+  const onUserSubmit = async (data: any = {}) => {
+    setUserFilter(data.userFilter);
+  };
+
+  if (result.fetching || userResult.fetching)
     return (
       <div className="bg-gray-20">
         <motion.div
@@ -156,28 +196,31 @@ const Exercises = ({ setSelectedPage, accessToken }: Props) => {
         </motion.div>
 
         {/* SEARCH BAR */}
-        <div className=" mx-2 mt-2 justify-between gap-8">
-          <form className="basis-3/5 md:mt-0" onSubmit={handleSubmit(onSubmit)}>
-            <div className="mt-5 flex items-center justify-between gap-1">
-              <input
-                className={inputStyles}
-                type="text"
-                placeholder="Search Exercises..."
-                {...register("filter", {
-                  maxLength: 30,
-                })}
-              />
-              <button
-                className="mb-5 whitespace-nowrap rounded-lg bg-primary-300 px-10 py-3 transition duration-500 hover:text-white"
-                type="submit"
-              >
-                {errors.filter && errors.filter.type === "maxLength"
-                  ? "Max length 30 char"
-                  : "Search"}
-              </button>
-            </div>
-          </form>
-          {accessToken ? (
+        {accessToken ? (
+          <div className=" mx-2 mt-2 justify-between gap-8">
+            <form
+              className="basis-3/5 md:mt-0"
+              onSubmit={handleSubmit(onUserSubmit)}
+            >
+              <div className="mt-5 flex items-center justify-between gap-1">
+                <input
+                  className={inputStyles}
+                  type="text"
+                  placeholder="Search Exercises..."
+                  {...register("userFilter", {
+                    maxLength: 30,
+                  })}
+                />
+                <button
+                  className="mb-5 whitespace-nowrap rounded-lg bg-primary-300 px-10 py-3 transition duration-500 hover:text-white"
+                  type="submit"
+                >
+                  {errors.userFilter && errors.userFilter.type === "maxLength"
+                    ? "Max length 30 char"
+                    : "Search"}
+                </button>
+              </div>
+            </form>
             <Link to="/addExercise">
               <button
                 type="button"
@@ -186,7 +229,33 @@ const Exercises = ({ setSelectedPage, accessToken }: Props) => {
                 Add Exercise
               </button>
             </Link>
-          ) : (
+          </div>
+        ) : (
+          <div className=" mx-2 mt-2 justify-between gap-8">
+            <form
+              className="basis-3/5 md:mt-0"
+              onSubmit={handleSubmit(onInitialSubmit)}
+            >
+              <div className="mt-5 flex items-center justify-between gap-1">
+                <input
+                  className={inputStyles}
+                  type="text"
+                  placeholder="Search Exercises..."
+                  {...register("filter", {
+                    maxLength: 30,
+                  })}
+                />
+                <button
+                  className="mb-5 whitespace-nowrap rounded-lg bg-primary-300 px-10 py-3 transition duration-500 hover:text-white"
+                  type="submit"
+                >
+                  {errors.filter && errors.filter.type === "maxLength"
+                    ? "Max length 30 char"
+                    : "Search"}
+                </button>
+              </div>
+            </form>
+
             <Link to="/logIn">
               <button
                 type="button"
@@ -195,31 +264,55 @@ const Exercises = ({ setSelectedPage, accessToken }: Props) => {
                 Add Exercise
               </button>
             </Link>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* EXERCISES */}
-        <motion.div
-          className="mt-5 items-center justify-between gap-8" // md:flex"
-          initial="hidden"
-          animate="visible"
-          //whileInView="visible"
-          viewport={{ once: true }}
-          variants={container}
-        >
-          {exercises.length !== 0 &&
-            exercises.map((exercise: ExerciseType) => (
-              <Exercise
-                key={exercise.id}
-                name={exercise.name}
-                equipment={exercise.equipment}
-                group={exercise.group}
-                type={exercise.type}
-                instructions={exercise.instructions}
-                setSelectedPage={setSelectedPage}
-              />
-            ))}
-        </motion.div>
+        {accessToken ? (
+          <motion.div
+            className="mt-5 items-center justify-between gap-8" // md:flex"
+            initial="hidden"
+            animate="visible"
+            //whileInView="visible"
+            viewport={{ once: true }}
+            variants={container}
+          >
+            {userExercises &&
+              userExercises.map((exercise: ExerciseType) => (
+                <Exercise
+                  key={exercise.id}
+                  name={exercise.name}
+                  equipment={exercise.equipment}
+                  group={exercise.group}
+                  type={exercise.type}
+                  instructions={exercise.instructions}
+                  setSelectedPage={setSelectedPage}
+                />
+              ))}
+          </motion.div>
+        ) : (
+          <motion.div
+            className="mt-5 items-center justify-between gap-8" // md:flex"
+            initial="hidden"
+            animate="visible"
+            //whileInView="visible"
+            viewport={{ once: true }}
+            variants={container}
+          >
+            {initialExercises &&
+              initialExercises.map((exercise: ExerciseType) => (
+                <Exercise
+                  key={exercise.id}
+                  name={exercise.name}
+                  equipment={exercise.equipment}
+                  group={exercise.group}
+                  type={exercise.type}
+                  instructions={exercise.instructions}
+                  setSelectedPage={setSelectedPage}
+                />
+              ))}
+          </motion.div>
+        )}
       </motion.div>
     </div>
   );

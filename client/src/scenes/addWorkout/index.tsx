@@ -26,14 +26,14 @@ type Props = {
 
 const buttonStyle = `mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`;
 
-const GetInitialFilteredExerciseQuery = `
-query ($filter: String!){
-  getInitialFilteredExercises(filter: $filter) {
+const GetUserFilteredQuery = `
+query ($userFilter: String!){
+  getUserFilteredExercises(userFilter: $userFilter) {
     id
     name
     equipment
     group
-    type    
+    type
     instructions
   }
 }
@@ -53,13 +53,14 @@ const AddWorkout = ({
   accessToken,
 }: Props) => {
   const [textButton, setTextButton] = useState<string>("CANCEL");
-  const [filter, setFilter] = useState<string>("");
+  const [userFilter, setUserFilter] = useState<string>("");
   const [exerciseList, setExerciseList] = useState<AddExerciseType[]>([]);
   const [workoutId, setWorkoutId] = useState<string>("");
 
-  const [result, filterSearch] = useQuery({
-    query: GetInitialFilteredExerciseQuery,
-    variables: { filter },
+  const [userResult, setUserHeader] = useQuery({
+    query: GetUserFilteredQuery,
+    variables: { userFilter },
+    pause: true,
   });
 
   const [{ data, fetching, error }, createWorkout] = useMutation(CreateWorkout);
@@ -76,9 +77,25 @@ const AddWorkout = ({
     }
   }, [error]);
 
+  useEffect(() => {
+    if (accessToken) {
+      setUserHeader({
+        fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
+      });
+    }
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (accessToken) {
+      setUserHeader({
+        fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
+      });
+    }
+  }, [userFilter]);
+
   const exercises = useMemo(
-    () => result.data?.getInitialFilteredExercises || [],
-    [result.data]
+    () => userResult.data?.getUserFilteredExercises || [],
+    [userResult.data]
   );
 
   const inputStyles = `mb-5 w-full rounded-lg bg-primary-300 px-5 py-3 placeholder-white`;
@@ -100,11 +117,11 @@ const AddWorkout = ({
   } = useForm();
 
   const onFilterSubmit = async (data: any = {}) => {
-    await setFilter(data.filter);
+    setUserFilter(data.userFilter);
   };
 
   const onWorkoutSubmit = async (data: any = {}) => {
-    await createWorkout(
+    createWorkout(
       { createWorkoutInput: data },
       {
         fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
@@ -123,7 +140,7 @@ const AddWorkout = ({
     setWorkoutValue("exerciseIds", ids);
   };
 
-  if (result.fetching)
+  if (userResult.fetching)
     return (
       <div className="bg-gray-20">
         <motion.div
@@ -271,7 +288,7 @@ const AddWorkout = ({
                 </p>
               )}
               {accessToken ? (
-                exerciseList.length !== 0 ? (
+                exerciseList ? (
                   <button
                     type="submit"
                     className="mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white"
@@ -335,70 +352,79 @@ const AddWorkout = ({
         </div>
 
         {/* SEARCH BAR */}
-        <div className=" mt-2 justify-between gap-8">
-          <form
-            className="basis-3/5 md:mt-0"
-            onSubmit={handleFilterSubmit(onFilterSubmit)}
-          >
-            <div className="mt-5 flex items-center justify-between gap-1">
-              <input
-                className={inputStyles}
-                type="text"
-                placeholder="Search Exercises..."
-                {...registerFilter("filter", {
-                  maxLength: 30,
-                })}
-              />
-              {/* {errorsFilter.filter && (
+        {accessToken && !error ? (
+          <div className=" mt-2 justify-between gap-8">
+            <form
+              className="basis-3/5 md:mt-0"
+              onSubmit={handleFilterSubmit(onFilterSubmit)}
+            >
+              <div className="mt-5 flex items-center justify-between gap-1">
+                <input
+                  className={inputStyles}
+                  type="text"
+                  placeholder="Search Exercises..."
+                  {...registerFilter("userFilter", {
+                    maxLength: 30,
+                  })}
+                />
+                {/* {errorsFilter.filter && (
                 <p className="text-primary-500">
                   {errorsFilter.filter.type === "maxLength" &&
                     "Max length is 30 char."}
                 </p>
               )} */}
-              <button
-                className="mb-5 whitespace-nowrap rounded-lg bg-primary-300 px-10 py-3 transition duration-500 hover:text-white"
-                type="submit"
-              >
-                {errorsFilter.filter && errorsFilter.filter.type === "maxLength"
-                  ? "Max length 30 char"
-                  : "Search"}
-              </button>
-            </div>
-          </form>
-        </div>
+                <button
+                  className="mb-5 whitespace-nowrap rounded-lg bg-primary-300 px-10 py-3 transition duration-500 hover:text-white"
+                  type="submit"
+                >
+                  {errorsFilter.userFilter &&
+                  errorsFilter.userFilter.type === "maxLength"
+                    ? "Max length 30 char"
+                    : "Search"}
+                </button>
+              </div>
+            </form>
+          </div>
+        ) : (
+          <></>
+        )}
 
         {/* EXERCISES */}
-        <motion.div
-          className="mt-5 items-center justify-between gap-8" // md:flex"
-          initial="hidden"
-          animate="visible"
-          //whileInView="visible"
-          viewport={{ once: true }}
-          variants={container}
-        >
-          {exercises.map(
-            ({
-              id,
-              name,
-              equipment,
-              group,
-              type,
-              instructions,
-            }: ExerciseType) => (
-              <ExerciseWorkoutAdd
-                key={id}
-                id={id}
-                name={name}
-                equipment={equipment}
-                group={group}
-                type={type}
-                instructions={instructions}
-                exerciseList={exerciseList}
-                setExerciseList={setExerciseList}
-              />
-            )
-          )}
-        </motion.div>
+        {accessToken && !error ? (
+          <motion.div
+            className="mt-5 items-center justify-between gap-8" // md:flex"
+            initial="hidden"
+            animate="visible"
+            //whileInView="visible"
+            viewport={{ once: true }}
+            variants={container}
+          >
+            {exercises.map(
+              ({
+                id,
+                name,
+                equipment,
+                group,
+                type,
+                instructions,
+              }: ExerciseType) => (
+                <ExerciseWorkoutAdd
+                  key={id}
+                  id={id}
+                  name={name}
+                  equipment={equipment}
+                  group={group}
+                  type={type}
+                  instructions={instructions}
+                  exerciseList={exerciseList}
+                  setExerciseList={setExerciseList}
+                />
+              )
+            )}
+          </motion.div>
+        ) : (
+          <></>
+        )}
       </motion.div>
     </div>
   );

@@ -51,7 +51,7 @@ const AddExercise = ({
   } = useForm();
 
   const onSubmit = async (data: any = {}) => {
-    await createExercise(
+    createExercise(
       { createExerciseInput: data },
       {
         fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },

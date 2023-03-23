@@ -47,12 +47,11 @@ query {
 `;
 
 const Workouts = ({ setSelectedPage, setAccessToken, accessToken }: Props) => {
-  const [paused, setPaused] = useState<boolean>(true);
   const [result] = useQuery({
     query: GetInitialWorkouts,
   });
 
-  const [userResult, setUserResult] = useQuery({
+  const [userResult, setUserHeader] = useQuery({
     query: GetUserWorkouts,
   });
 
@@ -66,13 +65,12 @@ const Workouts = ({ setSelectedPage, setAccessToken, accessToken }: Props) => {
     [result.data]
   );
 
-  const inputStyles = `mb-5 w-full rounded-lg bg-primary-300 px-5 py-3 placeholder-white`;
-
   useEffect(() => {
-    setUserResult({
-      fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
-    });
-    setPaused(false);
+    if (accessToken) {
+      setUserHeader({
+        fetchOptions: { headers: { Authorization: `Bearer ${accessToken}` } },
+      });
+    }
   }, [accessToken]);
 
   useEffect(() => {
@@ -183,7 +181,7 @@ const Workouts = ({ setSelectedPage, setAccessToken, accessToken }: Props) => {
           )}
         </motion.div>
 
-        {accessToken && !userResult.error ? (
+        {accessToken ? (
           <div className="mt-10 h-[353px] w-full overflow-x-auto overflow-y-hidden">
             <ul className="w-[2800px] whitespace-nowrap">
               {userWorkouts &&

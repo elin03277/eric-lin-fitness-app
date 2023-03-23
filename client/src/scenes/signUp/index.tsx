@@ -35,7 +35,7 @@ const SignUp = ({ setSelectedPage }: Props) => {
   } = useForm();
 
   const onSubmit = async (data: any = {}) => {
-    await signUp({ loginUserInput: data });
+    signUp({ loginUserInput: data });
     setInvisible("invisible");
     setTextButton("BACK");
     reset();

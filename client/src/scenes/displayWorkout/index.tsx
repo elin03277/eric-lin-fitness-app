@@ -52,14 +52,6 @@ const DisplayWorkout = ({ setSelectedPage }: Props) => {
 
   const workout = useMemo(() => result.data?.getWorkout || [], [result.data]);
 
-  const test = () => {
-    workoutId === undefined
-      ? console.log("Select a workout")
-      : console.log(result.data.getWorkout);
-  };
-
-  const inputStyles = `mb-5 w-full rounded-lg bg-primary-300 px-5 py-3 placeholder-white`;
-
   if (result.fetching)
     return (
       <div className="bg-gray-20">
@@ -67,6 +59,13 @@ const DisplayWorkout = ({ setSelectedPage }: Props) => {
           className="mx-auto w-5/6 gap-16 py-20 md:h-full"
           onViewportEnter={() => setSelectedPage(SelectedPage.Workouts)}
         >
+          <button
+            type="button"
+            className="invisible mt-2 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
+          >
+            Back
+          </button>
+
           {/* HEADER */}
           <motion.div
             //className="md:my-5 md:w-3/5"
@@ -113,6 +112,14 @@ const DisplayWorkout = ({ setSelectedPage }: Props) => {
         className="mx-auto w-5/6  gap-16 py-20 md:h-full"
         onViewportEnter={() => setSelectedPage(SelectedPage.Workouts)}
       >
+        <Link to="/workouts">
+          <button
+            type="button"
+            className="mt-2 rounded-lg bg-primary-300 px-20 py-3 transition duration-500 hover:text-white"
+          >
+            Back
+          </button>
+        </Link>
         {/* HEADER */}
         <motion.div
           //className="md:my-5 md:w-3/5"
@@ -141,7 +148,7 @@ const DisplayWorkout = ({ setSelectedPage }: Props) => {
           viewport={{ once: true }}
           variants={container}
         >
-          {workout.exercises.length !== 0 &&
+          {workout.exercises &&
             workout.exercises.map(
               (
                 {
