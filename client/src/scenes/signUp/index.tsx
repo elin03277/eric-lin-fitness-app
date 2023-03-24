@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import HText from "@/shared/HText";
 import { useMutation } from "urql";
-import Exercise from "@/shared/Exercise";
 import { useState } from "react";
 
 type Props = {
@@ -70,7 +69,7 @@ const SignUp = ({ setSelectedPage }: Props) => {
           }}
         >
           <HText>
-            <span className="text-primary-500">SIGN UP</span> TO GET ACCESS TO
+            <span className="text-secondary-500">SIGN UP</span> TO GET ACCESS TO
             MORE FEATURES!
           </HText>
           <p className="my-5">

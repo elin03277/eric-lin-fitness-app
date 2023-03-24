@@ -1,11 +1,10 @@
-import { AddExerciseType, ExerciseType, SelectedPage } from "@/shared/types";
+import { ExerciseType, SelectedPage } from "@/shared/types";
 import { motion } from "framer-motion";
-import { useMutation, useQuery } from "urql";
+import { useQuery } from "urql";
 import HText from "@/shared/HText";
 import Exercise from "@/shared/Exercise";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useForm } from "react-hook-form";
 
 const container = {
   hidden: {},
@@ -16,10 +15,7 @@ const container = {
 
 type Props = {
   setSelectedPage: (value: SelectedPage) => void;
-  // accessToken: string;
 };
-
-const buttonStyle = `mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`;
 
 const GetWorkoutQuery = `
 query ($id: String!){
@@ -40,12 +36,11 @@ query ($id: String!){
 `;
 
 const DisplayWorkout = ({ setSelectedPage }: Props) => {
-  // , accessToken }: Props) => {
   const location = useLocation();
   const workoutId = location.state?.passedWorkoutId;
   const [id, setId] = useState<string>(workoutId);
 
-  const [result, workoutDisplay] = useQuery({
+  const [result] = useQuery({
     query: GetWorkoutQuery,
     variables: { id },
   });
@@ -68,11 +63,9 @@ const DisplayWorkout = ({ setSelectedPage }: Props) => {
 
           {/* HEADER */}
           <motion.div
-            //className="md:my-5 md:w-3/5"
             className="mt-5 rounded-md border-2 border-gray-100 px-5 py-16 text-center"
             initial="hidden"
             animate="visible"
-            // whileInView="visible"
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.5 }}
             variants={{
@@ -122,11 +115,9 @@ const DisplayWorkout = ({ setSelectedPage }: Props) => {
         </Link>
         {/* HEADER */}
         <motion.div
-          //className="md:my-5 md:w-3/5"
           className="mt-5 rounded-md border-2 border-gray-100 px-5 py-16 text-center"
           initial="hidden"
           animate="visible"
-          // whileInView="visible"
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.5 }}
           variants={{
@@ -141,10 +132,9 @@ const DisplayWorkout = ({ setSelectedPage }: Props) => {
 
         {/* EXERCISES */}
         <motion.div
-          className="mt-5 items-center justify-between gap-8" // md:flex"
+          className="mt-5 items-center justify-between gap-8"
           initial="hidden"
           animate="visible"
-          //whileInView="visible"
           viewport={{ once: true }}
           variants={container}
         >

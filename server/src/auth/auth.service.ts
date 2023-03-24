@@ -49,7 +49,6 @@ export class AuthService {
 
   async decode(token: string): Promise<User> {
     const decoded = this.jwtService.verify(token);
-    // console.log(decoded.sub);
     const user = await this.usersService.findByUsername(decoded.username);
 
     if (!user) {
@@ -75,7 +74,6 @@ export class AuthService {
         },
         { expiresIn: '2m' },
       ),
-      // Give new refresh token?
       user,
     };
   }

@@ -5,7 +5,6 @@ type Props = {
   name: string;
   type: string;
   description: string;
-  //onPress?: () => void;
 };
 
 const Workout = ({ id, name, type, description }: Props) => {
@@ -15,10 +14,7 @@ const Workout = ({ id, name, type, description }: Props) => {
     opacity-0 transition duration-500 hover:opacity-90`;
 
   return (
-    <li
-      className="relative mx-5 inline-block h-[380px] w-[450px] cursor-pointer"
-      // onClick={onPress}
-    >
+    <li className="relative mx-5 inline-block h-[380px] w-[450px] cursor-pointer">
       <Link
         to="/displayWorkout"
         state={{ passedWorkoutId: id }}

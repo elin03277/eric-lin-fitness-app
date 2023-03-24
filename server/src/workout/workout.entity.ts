@@ -34,8 +34,7 @@ export class Workout {
   description: string;
 
   @Column()
-  // @ManyToMany(() => Exercise, (exercise) => exercise.workouts)
-  @Field((type) => [Exercise]) //, { nullable: true })
+  @Field((type) => [Exercise])
   exercises: Exercise[];
 
   @Index()

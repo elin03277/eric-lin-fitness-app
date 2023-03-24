@@ -27,7 +27,6 @@ const LogIn = ({ setSelectedPage, setAccessToken }: Props) => {
 
   const [dataReceived, useDataReceived] = useState<string>("");
   const [textButton, setTextButton] = useState<string>("CANCEL");
-  // const [token, setToken] = useState<string>("");
   const [{ data, fetching, error }, logIn] = useMutation(LogInMutation);
 
   useEffect(() => {
@@ -50,16 +49,6 @@ const LogIn = ({ setSelectedPage, setAccessToken }: Props) => {
     }
     reset();
   };
-
-  // if (fetching)
-  //   return (
-  //     <div className="bg-gray-20">
-  //       <motion.div
-  //         onViewportEnter={() => setSelectedPage(SelectedPage.LogIn)}
-  //         className="mx-auto w-5/6 pt-24 pb-32"
-  //       ></motion.div>
-  //     </div>
-  //   );
 
   return (
     <div className="bg-gray-20">

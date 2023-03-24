@@ -19,7 +19,4 @@ export class CreateExerciseInput {
 
   @Field()
   instructions: string;
-
-  // @Field({ nullable: true })
-  // workoutId?: string;
 }

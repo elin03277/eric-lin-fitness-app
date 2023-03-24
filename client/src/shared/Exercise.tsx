@@ -1,7 +1,6 @@
 import { SelectedPage } from "@/shared/types";
-// import AnchorLink from "react-anchor-link-smooth-scroll";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const childVariant = {
   hidden: { opacity: 0, scale: 0.9 },
@@ -25,6 +24,8 @@ const Exercise = ({
   instructions,
   setSelectedPage,
 }: Props) => {
+  const [toggle, setToggle] = useState<boolean>(false);
+
   return (
     <motion.div
       variants={childVariant}
@@ -34,18 +35,14 @@ const Exercise = ({
       <p className="my-3">Equipment: {equipment}</p>
       <p className="my-3">Group: {group}</p>
       <p className="my-3">Type: {type}</p>
-      <p className="my-3">Instructions: {instructions}</p>
-      {setSelectedPage ? (
-        <Link
-          className="text-sm font-bold text-primary-500 underline hover:text-secondary-500"
-          onClick={() => setSelectedPage(SelectedPage.SignUp)}
-          to={`/${SelectedPage.SignUp}`}
-        >
-          <p>Learn More</p>
-        </Link>
-      ) : (
-        <></>
-      )}
+
+      <button
+        className="text-sm font-bold text-primary-500 underline hover:text-secondary-500"
+        onClick={() => setToggle(!toggle)}
+      >
+        Learn More
+      </button>
+      {toggle ? <p className="my-3">Instructions: {instructions}</p> : <></>}
     </motion.div>
   );
 };

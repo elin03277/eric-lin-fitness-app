@@ -1,11 +1,10 @@
 import useMediaQuery from "@/hooks/useMediaQuery";
-import ActionButton from "@/shared/ActionButton";
 import { ExerciseType, SelectedPage } from "@/shared/types";
 import { motion } from "framer-motion";
 import { useQuery } from "urql";
 import HText from "@/shared/HText";
 import Exercise from "@/shared/Exercise";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 const container = {
@@ -41,14 +40,13 @@ query {
 `;
 
 const Home = ({ setSelectedPage, accessToken }: Props) => {
-  const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
   const [offset, setOffset] = useState<number>(0);
   const [limit, setLimit] = useState<number>(1);
   const [pages, setPages] = useState<number>(1);
   const [prevInvisible, setPrevInvisible] = useState<string>("invisible");
   const [nextInvisible, setNextInvisible] = useState<string>("");
-  const [previousExercises, setPreviousExercises] = useState<any[]>([]);
-  const [currentExercises, setCurrentExercises] = useState<any>(null);
+  const [previousExercises, setPreviousExercises] = useState<unknown[]>([]);
+  const [currentExercises, setCurrentExercises] = useState<unknown>(null);
 
   const [result] = useQuery({
     query: GetExerciseQuery,
@@ -63,6 +61,43 @@ const Home = ({ setSelectedPage, accessToken }: Props) => {
     () => result.data?.getInitialExercises || [],
     [result.data]
   );
+
+  const pageLimit = useMemo(
+    () => Math.floor(countResult.data?.countInitialExercises / limit) || 0,
+    [countResult.data]
+  );
+
+  useEffect(() => {
+    if (!countResult.fetching) {
+      pages > 1 ? setPrevInvisible("") : setPrevInvisible("invisible");
+      pages < pageLimit ? setNextInvisible("") : setNextInvisible("invisible");
+    }
+  }, [pages]);
+
+  const handlePreviousButton = () => {
+    if (offset >= limit) {
+      setOffset(offset - limit);
+      setCurrentExercises(previousExercises[previousExercises.length - limit]);
+      setPreviousExercises(
+        previousExercises.slice(0, previousExercises.length - limit)
+      );
+      setPages(pages - 1);
+    }
+  };
+
+  const handleNextButton = (exercise: unknown[]) => {
+    if (pages < pageLimit) {
+      setOffset(offset + limit);
+      setPreviousExercises([...previousExercises, currentExercises]);
+
+      previousExercises.includes(exercise)
+        ? setCurrentExercises(
+            previousExercises[previousExercises.length + limit]
+          )
+        : setCurrentExercises(exercise);
+      setPages(pages + 1);
+    }
+  };
 
   if (result.fetching || countResult.fetching)
     return (
@@ -98,9 +133,8 @@ const Home = ({ setSelectedPage, accessToken }: Props) => {
 
           {/* EXERCISES */}
           <motion.div
-            className="mt-5 items-center justify-between gap-8" // md:flex"
+            className="mt-5 items-center justify-between gap-8"
             initial="hidden"
-            // whileInView="visible"
             animate="visible"
             viewport={{ once: true, amount: 0.5 }}
             variants={container}
@@ -125,41 +159,6 @@ const Home = ({ setSelectedPage, accessToken }: Props) => {
         </motion.div>
       </div>
     );
-
-  const count = countResult.data;
-  const pageLimit = Math.floor(count.countInitialExercises / limit);
-
-  const handlePreviousButton = () => {
-    console.log(pages);
-    pages === 2 ? setPrevInvisible("invisible") : setPrevInvisible("");
-    if (offset >= limit) {
-      setOffset(offset - limit);
-      setCurrentExercises(previousExercises[previousExercises.length - limit]);
-      setPreviousExercises(
-        previousExercises.slice(0, previousExercises.length - limit)
-      );
-      setNextInvisible("");
-      setPages(pages - 1);
-    }
-  };
-
-  const handleNextButton = (exercise: any[]) => {
-    pages + 1 < pageLimit
-      ? setNextInvisible("")
-      : setNextInvisible("invisible");
-    if (pages < pageLimit) {
-      setOffset(offset + limit);
-      setPreviousExercises([...previousExercises, currentExercises]);
-
-      previousExercises.includes(exercise)
-        ? setCurrentExercises(
-            previousExercises[previousExercises.length + limit]
-          )
-        : setCurrentExercises(exercise);
-      setPrevInvisible("");
-      setPages(pages + 1);
-    }
-  };
 
   return (
     <div className="bg-gray-20">
@@ -207,7 +206,7 @@ const Home = ({ setSelectedPage, accessToken }: Props) => {
 
         {/* EXERCISES */}
         <motion.div
-          className="mt-5 items-center justify-between gap-8" // md:flex"
+          className="mt-5 items-center justify-between gap-8"
           initial="hidden"
           animate="visible"
           viewport={{ once: true, amount: 0.5 }}

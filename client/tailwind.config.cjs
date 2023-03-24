@@ -8,11 +8,11 @@ module.exports = {
         "gray-50": "#EFE6E6",
         "gray-100": "#DFCCCC",
         "gray-500": "#5E0000",
-        "primary-100": "#FFE1E0",
-        "primary-300": "#FFA6A3",
-        "primary-500": "#FF6B66",
-        "secondary-400": "#FFCD58",
-        "secondary-500": "#FFC132",
+        "primary-100": "#B1D4F2",
+        "primary-300": "#5FA9DB",
+        "primary-500": "#0080C6",
+        "secondary-400": "#FFC383",
+        "secondary-500": "#FF944E",
       },
       backgroundImage: (theme) => ({
         "gradient-yellowred":

@@ -45,8 +45,7 @@ const ContactUs = ({ setSelectedPage }: Props) => {
             <span className="text-primary-500">JOIN NOW</span> TO GET IN SHAPE
           </HText>
           <p className="my-5">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
-            pharetra venenatis pellentesque.
+            Questions about exercises or workouts? Contact me, happy to help!
           </p>
         </motion.div>
 
@@ -136,11 +135,11 @@ const ContactUs = ({ setSelectedPage }: Props) => {
             }}
           >
             <div className="w-full before:absolute before:-bottom-20 before:-right-10 before:z-[-1] md:before:content-evolvetext">
-              <img
+              {/* <img
                 className="w-full"
                 alt="contact-us-page-graphic"
                 src={ContactUsPageGraphic}
-              />
+              /> */}
             </div>
           </motion.div>
         </div>

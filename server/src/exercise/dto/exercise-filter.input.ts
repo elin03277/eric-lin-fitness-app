@@ -5,7 +5,6 @@ import { Exercise } from '../exercise.entity';
 
 @InputType()
 export class ExerciseFilterInput {
-  // @IsString()
   @Field()
   filter: string;
 }

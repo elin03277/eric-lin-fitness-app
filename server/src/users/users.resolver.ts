@@ -10,10 +10,7 @@ export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Query(() => [User], { name: 'users' })
-  // @UseGuards(JwtAuthGuard)
-  // @UseGuards(SessionAuthGuard)
   findAll() {
-    // findAll(@Context() context) {} will make the user available in context.user
     return this.usersService.getUsers();
   }
 

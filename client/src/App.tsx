@@ -117,7 +117,6 @@ function App() {
           element={
             <LogIn
               setSelectedPage={setSelectedPage}
-              // Set access token in login and pass it to add exercise and workout
               setAccessToken={setAccessToken}
             />
           }

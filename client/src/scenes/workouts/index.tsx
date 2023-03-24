@@ -1,11 +1,8 @@
-import useMediaQuery from "@/hooks/useMediaQuery";
-import ActionButton from "@/shared/ActionButton";
-import { ExerciseType, SelectedPage, WorkoutType } from "@/shared/types";
+import { SelectedPage, WorkoutType } from "@/shared/types";
 import { motion } from "framer-motion";
 import { useQuery } from "urql";
 import HText from "@/shared/HText";
-import Exercise from "@/shared/Exercise";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import Workout from "./Workout";
 
@@ -21,8 +18,6 @@ type Props = {
   setAccessToken: (value: string) => void;
   accessToken: string;
 };
-
-const buttonStyle = `mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`;
 
 const GetInitialWorkouts = `
 query {
@@ -90,7 +85,6 @@ const Workouts = ({ setSelectedPage, setAccessToken, accessToken }: Props) => {
           <motion.div
             className="md:my-5 md:w-3/5"
             initial="hidden"
-            // whileInView="visible"
             animate="visible"
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.5 }}
@@ -147,7 +141,6 @@ const Workouts = ({ setSelectedPage, setAccessToken, accessToken }: Props) => {
           className="md:my-5 md:w-3/5"
           initial="hidden"
           animate="visible"
-          // whileInView="visible"
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.5 }}
           variants={{

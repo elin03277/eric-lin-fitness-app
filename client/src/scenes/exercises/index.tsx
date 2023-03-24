@@ -1,5 +1,4 @@
 import useMediaQuery from "@/hooks/useMediaQuery";
-import ActionButton from "@/shared/ActionButton";
 import { ExerciseType, SelectedPage } from "@/shared/types";
 import { motion } from "framer-motion";
 import { useQuery } from "urql";
@@ -51,7 +50,6 @@ query ($userFilter: String!){
 `;
 
 const Exercises = ({ setSelectedPage, setAccessToken, accessToken }: Props) => {
-  const isAboveMediumScreens = useMediaQuery("(min-width:1060px)");
   const [filter, setFilter] = useState<string>("");
   const [userFilter, setUserFilter] = useState<string>("");
 
@@ -126,7 +124,6 @@ const Exercises = ({ setSelectedPage, setAccessToken, accessToken }: Props) => {
           <motion.div
             className="md:my-5 md:w-3/5"
             initial="hidden"
-            // whileInView="visible"
             animate="visible"
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.5 }}
@@ -180,7 +177,6 @@ const Exercises = ({ setSelectedPage, setAccessToken, accessToken }: Props) => {
           className="md:my-5 md:w-3/5"
           initial="hidden"
           animate="visible"
-          // whileInView="visible"
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.5 }}
           variants={{
@@ -270,10 +266,9 @@ const Exercises = ({ setSelectedPage, setAccessToken, accessToken }: Props) => {
         {/* EXERCISES */}
         {accessToken ? (
           <motion.div
-            className="mt-5 items-center justify-between gap-8" // md:flex"
+            className="mt-5 items-center justify-between gap-8"
             initial="hidden"
             animate="visible"
-            //whileInView="visible"
             viewport={{ once: true }}
             variants={container}
           >
@@ -292,10 +287,9 @@ const Exercises = ({ setSelectedPage, setAccessToken, accessToken }: Props) => {
           </motion.div>
         ) : (
           <motion.div
-            className="mt-5 items-center justify-between gap-8" // md:flex"
+            className="mt-5 items-center justify-between gap-8"
             initial="hidden"
             animate="visible"
-            //whileInView="visible"
             viewport={{ once: true }}
             variants={container}
           >

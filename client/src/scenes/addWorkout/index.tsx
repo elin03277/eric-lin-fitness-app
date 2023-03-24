@@ -1,5 +1,3 @@
-import useMediaQuery from "@/hooks/useMediaQuery";
-import ActionButton from "@/shared/ActionButton";
 import { AddExerciseType, ExerciseType, SelectedPage } from "@/shared/types";
 import { motion } from "framer-motion";
 import { useMutation, useQuery } from "urql";
@@ -23,8 +21,6 @@ type Props = {
   setAccessToken: (value: string) => void;
   accessToken: string;
 };
-
-const buttonStyle = `mx-2 mt-5 rounded-lg bg-secondary-500 px-20 py-3 transition duration-500 hover:text-white`;
 
 const GetUserFilteredQuery = `
 query ($userFilter: String!){
@@ -151,7 +147,6 @@ const AddWorkout = ({
           <motion.div
             className="md:my-5 md:w-3/5"
             initial="hidden"
-            // whileInView="visible"
             animate="visible"
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.5 }}
@@ -198,7 +193,6 @@ const AddWorkout = ({
           className="md:my-5 md:w-3/5"
           initial="hidden"
           animate="visible"
-          // whileInView="visible"
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.5 }}
           variants={{
@@ -367,12 +361,6 @@ const AddWorkout = ({
                     maxLength: 30,
                   })}
                 />
-                {/* {errorsFilter.filter && (
-                <p className="text-primary-500">
-                  {errorsFilter.filter.type === "maxLength" &&
-                    "Max length is 30 char."}
-                </p>
-              )} */}
                 <button
                   className="mb-5 whitespace-nowrap rounded-lg bg-primary-300 px-10 py-3 transition duration-500 hover:text-white"
                   type="submit"
@@ -392,10 +380,9 @@ const AddWorkout = ({
         {/* EXERCISES */}
         {accessToken && !error ? (
           <motion.div
-            className="mt-5 items-center justify-between gap-8" // md:flex"
+            className="mt-5 items-center justify-between gap-8"
             initial="hidden"
             animate="visible"
-            //whileInView="visible"
             viewport={{ once: true }}
             variants={container}
           >

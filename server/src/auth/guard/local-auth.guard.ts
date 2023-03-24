@@ -17,12 +17,4 @@ export class LocalAuthGuard extends AuthGuard('local') {
 
     return request;
   }
-
-  // async canActivate(context: ExecutionContext) {
-  //   await super.canActivate(context);
-  //   const ctx = GqlExecutionContext.create(context);
-  //   const req = ctx.getContext().req;
-  //   await super.logIn(req);
-  //   return true;
-  // }
 }
